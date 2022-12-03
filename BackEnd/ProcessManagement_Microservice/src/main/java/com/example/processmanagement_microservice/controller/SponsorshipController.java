@@ -20,30 +20,34 @@ public class SponsorshipController {
         return sponsorshipService.addSponsorship(newSponsorship);
     }
 
+    //good
     @DeleteMapping("/processmanagement-microservice/processmanagement/sponsorship")
     public void deleteSponsorship(Sponsorship sponsorship){
         sponsorshipService.deleteByPK(sponsorship.getSponsorId(),sponsorship.getSubjectId());
     }
 
+    //good
     @PutMapping("/processmanagement-microservice/processmanagement/sponsorship")
     public int changeSponsorship(Sponsorship newsponsorship){
         return sponsorshipService.changeSponsorship(newsponsorship);
     }
 
+
+    //good
     @GetMapping("/processmanagement-microservice/processmanagement/sponsorship")
-    public Optional<Sponsorship> findSponsorshipByPK(String sponsorid, String subjectid){
-        return sponsorshipService.findByPK(sponsorid,subjectid);
+    public Sponsorship findSponsorshipByPK(String sponsorId, String subjectId){
+        return sponsorshipService.findByPKNo(sponsorId,subjectId);
     }
 
+    //good
     @GetMapping("/processmanagement-microservice/processmanagement/sponsorship/SP")
-    public List findAllSponsorshipBySPid(String sponsorid){
-        return sponsorshipService.findAllSponsorshipBySPid(sponsorid);
+    public List findAllSponsorshipBySPid(String sponsorId){
+        return sponsorshipService.findAllSponsorshipBySPid(sponsorId);
     }
 
+    //good
     @GetMapping("/processmanagement-microservice/processmanagement/sponsorship/SB")
-    public List findAllSponsorshipBySBid(String subjectid){
-        return sponsorshipService.findAllSponsorshipBySBid(subjectid);
+    public List findAllSponsorshipBySBid(String subjectId){
+        return sponsorshipService.findAllSponsorshipBySBid(subjectId);
     }
-
-
 }

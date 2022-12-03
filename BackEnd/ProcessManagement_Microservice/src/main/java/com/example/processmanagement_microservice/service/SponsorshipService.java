@@ -48,8 +48,22 @@ public class SponsorshipService {
         return sponsorship;
     }
 
+    public Sponsorship findByPKNo(String sponsorId,String subjectId){
+        Sponsorship sponsorship=null;
+        int exist = this.isExist(sponsorId,subjectId);
+        if(exist!=0){
+            Sponsorship checkSponsorship=new Sponsorship();
+            checkSponsorship.setSponsorId(sponsorId)
+                    .setSubjectId(subjectId);
+            Example<Sponsorship> sponsorshipExample=Example.of(checkSponsorship);
+            List<Sponsorship> sponsorshipList=sponsorshipDao.findAll(sponsorshipExample);
+            sponsorship= sponsorshipList.get(0);
+        }
+        return sponsorship;
+    }
+
     public void deleteByPK(String sponsorid,String subjectid){
-        Optional<Sponsorship> sponsorship=this.findByPK(sponsorid,subjectid);
+        Sponsorship sponsorship=this.findByPKNo(sponsorid,subjectid);
         sponsorshipDao.delete(sponsorship);
     }
 

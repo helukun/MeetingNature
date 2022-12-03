@@ -32,23 +32,27 @@ public class OrderController {
         return orderService.changeOrder(newOrder);
     }
 
+    //good
     @GetMapping("/processmanagement-microservice/processmanagement/order")
     public Optional<Order> findOrder(String id){
         return orderService.findById(id);
     }
 
+    //good
     @GetMapping("/processmanagement-microservice/processmanagement/order/IC")
-    public List findAllIncompleteOrders(String sponsorid){
-        return orderService.getAllIncompleteOrders(sponsorid);
+    public List findAllIncompleteOrders(String sponsorId){
+        return orderService.getAllIncompleteOrders(sponsorId);
     }
 
+    //good
     @GetMapping("/processmanagement-microservice/processmanagement/order/C")
-    public List findAllCompleteOrders(String sponsorid){
-        return orderService.getAllCompleteOrders(sponsorid);
+    public List findAllCompleteOrders(String sponsorId){
+        return orderService.getAllCompleteOrders(sponsorId);
     }
 
+    //good
     @GetMapping("/processmanagement-microservice/processmanagement/order/All")
-    public List findAllOrders(String sponsorid){
-        return orderService.getAllOrders(sponsorid);
+    public List findAllOrders(String sponsorId){
+        return orderService.getAllOrders(sponsorId);
     }
 }

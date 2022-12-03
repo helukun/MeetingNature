@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface SponsorshipDao extends MongoRepository<Sponsorship, String> {
-    public Optional<Sponsorship> findById(String id);
-    void delete(Optional<Sponsorship> sponsorship);
+
 }
