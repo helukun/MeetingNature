@@ -1,6 +1,7 @@
 package com.example.processmanagement_microservice.controller;
 
 import com.example.processmanagement_microservice.dao.SponsorshipDao;
+import com.example.processmanagement_microservice.model.FeedBack;
 import com.example.processmanagement_microservice.model.Sponsorship;
 import com.example.processmanagement_microservice.service.SponsorshipService;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,6 @@ public class SponsorshipController {
         return sponsorshipService.changeSponsorship(newsponsorship);
     }
 
-
     //good
     @GetMapping("/processmanagement-microservice/processmanagement/sponsorship")
     public Sponsorship findSponsorshipByPK(String sponsorId, String subjectId){
@@ -41,7 +41,7 @@ public class SponsorshipController {
 
     //good
     @GetMapping("/processmanagement-microservice/processmanagement/sponsorship/SP")
-    public List findAllSponsorshipBySPid(String sponsorId){
+    public List<FeedBack> findAllSponsorshipBySPid(String sponsorId){
         return sponsorshipService.findAllSponsorshipBySPid(sponsorId);
     }
 
