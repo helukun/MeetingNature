@@ -9,6 +9,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author ：ZXM+LJC
+ * @description：SponsorshipService
+ * @date ：2022-12-9 15:47
+ * @version : 1.0
+ */
+
 @Service
 public class SponsorshipService {
     @Autowired
@@ -36,20 +43,6 @@ public class SponsorshipService {
             result=1;
         }
         return result;
-    }
-
-    public Optional<Sponsorship> findByPK(String sponsorid,String subjectid){
-        Optional<Sponsorship> sponsorship=null;
-        int exist = this.isExist(sponsorid,subjectid);
-        if(exist!=0){
-            Sponsorship checkSponsorship=new Sponsorship();
-            checkSponsorship.setSponsorId(sponsorid)
-                    .setSubjectId(subjectid);
-            Example<Sponsorship> sponsorshipExample=Example.of(checkSponsorship);
-            List<Sponsorship> sponsorshipList=sponsorshipDao.findAll(sponsorshipExample);
-            sponsorship= Optional.ofNullable(sponsorshipList.get(0));
-        }
-        return sponsorship;
     }
 
     public Sponsorship findByPKNo(String sponsorId,String subjectId){

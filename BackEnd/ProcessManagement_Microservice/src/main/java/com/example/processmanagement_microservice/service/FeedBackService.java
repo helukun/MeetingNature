@@ -6,6 +6,7 @@ import com.example.processmanagement_microservice.model.FeedBack;
 import com.example.processmanagement_microservice.model.Order;
 import com.example.processmanagement_microservice.dao.OrderDao;
 import com.example.processmanagement_microservice.model.Sponsorship;
+import com.netflix.discovery.converters.Auto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -26,6 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author ：ZXM+LJC
+ * @description：FeedBackService
+ * @date ：2022-12-9 15:47
+ * @version : 1.0
+ */
+
 @Service
 public class FeedBackService {
     @Autowired
@@ -36,7 +44,7 @@ public class FeedBackService {
     public int isExist(String subjectId,String time){
         FeedBack checkFeedBack=new FeedBack();
         checkFeedBack.setSubjectId(subjectId)
-                .setTime(time);
+                .setCreateTime(time);
         Example<FeedBack> feedBackExample=Example.of(checkFeedBack);
         long count=feedBackDao.count(feedBackExample);
 
@@ -63,7 +71,7 @@ public class FeedBackService {
         if(exist!=0){
             FeedBack checkFeedBack=new FeedBack();
             checkFeedBack.setSubjectId(subjectId)
-                    .setTime(time);
+                    .setCreateTime(time);
             Example<FeedBack> feedBackExample=Example.of(checkFeedBack);
             List<FeedBack> feedBackList=feedBackDao.findAll(feedBackExample);
             feedBack=feedBackList.get(0);
@@ -72,8 +80,9 @@ public class FeedBackService {
     }
 
 
+    /*
     @PostMapping("/upload")
-    public void upload(String fileName, MultipartFile f, HttpServletRequest request) throws IOException {
+    public void uploadPicture(String fileName, MultipartFile f, HttpServletRequest request) throws IOException {
         System.out.println(fileName);
         System.out.println(f.getOriginalFilename());
         System.out.println(f.getContentType());
@@ -81,43 +90,79 @@ public class FeedBackService {
         String path="D:\\IDEA_ultimate\\File";
         System.out.println(path);
         saveFile(f,path);
-    }
+    }*/
 
     public void saveFile(MultipartFile f,String path) throws IOException {
         File dir=new File(path);
         if(!dir.exists()){
             dir.mkdir();
         }
-        File file=new File(path);
+        File file=new File(path+f.getOriginalFilename());
         f.transferTo(file);
     }
 
-    public void addFeedBack(MultipartFile f,String subjectId) throws IOException {
+    public String addPicture(String subjectId,String createTime,MultipartFile picture,HttpServletRequest request) throws IOException {
+        String message="";    //合法性
+        FeedBack feedBack=this.findByPKNo(subjectId,createTime);
+        if(feedBack==null){
+            return message+"Failed!";
+        }
+
+        String tmpPath=request.getServletContext().getRealPath("/File/");
+        //String tmpPath="D:\\IDEA_ultimate\\File\\"+picture.getOriginalFilename();
+        saveFile(picture,tmpPath);
+        List<String> pathlist=feedBack.getPathList();
+        pathlist.add(tmpPath+picture.getOriginalFilename());
+        feedBack.setPathList(pathlist);
+        feedBackDao.save(feedBack);
+        message+=tmpPath+picture.getOriginalFilename();
+        return message;
+    }
+
+    public void addContent(String subjectId,String createTime,String content){
+        FeedBack feedBack=this.findByPKNo(subjectId,createTime);
+        feedBack.setContent(content);
+        feedBackDao.save(feedBack);
+    }
+
+    public void changeStatus(String subjectId,String createTime,String status){
+        FeedBack feedBack=this.findByPKNo(subjectId,createTime);
+        feedBack.setStatus(status);
+        feedBackDao.save(feedBack);
+    }
+
+    //创建新的feedback
+    public void addFeedBack(String subjectId) throws IOException {
         int exist=this.isExist(subjectId,String.valueOf(LocalDateTime.now()));
         FeedBack feedBack=new FeedBack();
         feedBack.setId(this.setNextId())
                 .setSubjectId(subjectId)
-                .setTime(String.valueOf(LocalDateTime.now()))
-                .setPath("D:\\IDEA_ultimate\\File\\"+f.getOriginalFilename());
-        saveFile(f,feedBack.getPath());
+                .setCreateTime(String.valueOf(LocalDateTime.now()))
+                .setStatus("incomplete")
+                .setPathList(new ArrayList<>());
         feedBackDao.save(feedBack);
     }
 
-    public void deleteByPK(String subjectId,String time){
+    //删除feedback时自动删除所有文件
+    public void deleteFeedBackByPK(String subjectId,String time){
         int exist=this.isExist(subjectId,time);
         if(exist==0){
             return;
         }
         FeedBack feedBack=this.findByPKNo(subjectId,time);
-        File myObj = new File(feedBack.getPath());
-        if (myObj.delete()) {
-            System.out.println("Deleted the file: " + myObj.getName());
-        } else {
-            System.out.println("Failed to delete the file.");
+        List<String> pathlist=feedBack.getPathList();
+        for(String e:pathlist){
+            File myObj = new File(e);
+            if (myObj.delete()) {
+                System.out.println("Deleted the file: " + myObj.getName());
+            } else {
+                System.out.println("Failed to delete the file.");
+            }
         }
         feedBackDao.delete(feedBack);
     }
 
+    //反馈所有内容
     public List<FeedBack> findFBBySB(String subjectId){
         FeedBack checkFB=new FeedBack();
         checkFB.setSubjectId(subjectId);
@@ -126,6 +171,7 @@ public class FeedBackService {
         return list;
     }
 
+    //反馈所有内容
     public List<FeedBack> findFBBySP(String sponsorId){
         List<Sponsorship> sponsorshipList=sponsorshipService.findAllSponsorshipBySPid(sponsorId);
         List<String> stringList = new ArrayList<>();

@@ -10,6 +10,14 @@ import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
+import java.util.List;
+
+/**
+ * @author ：ZXM+LJC
+ * @description：Project
+ * @date ：2022-12-9 15:23
+ * @version : 1.0
+ */
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,5 +30,7 @@ public class Project implements Serializable{
     private String projectName;
     private String organization;
     private String describe;
-    private String[] followerList;
+    private String status;
+    private String createTime;
+    private List<String> followerList;
 }

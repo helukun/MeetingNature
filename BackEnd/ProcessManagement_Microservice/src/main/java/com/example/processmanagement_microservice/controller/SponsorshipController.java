@@ -10,6 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author ：ZXM+LJC
+ * @description：SponsorshipController
+ * @date ：2022-12-9 15:45
+ * @version : 1.0
+ */
+
 @RestController
 public class SponsorshipController {
     @Autowired

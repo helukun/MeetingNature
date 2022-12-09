@@ -10,6 +10,13 @@ import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 
+/**
+ * @author ：ZXM+LJC
+ * @description：Sponsorship
+ * @date ：2022-12-9 15:46
+ * @version : 1.0
+ */
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)

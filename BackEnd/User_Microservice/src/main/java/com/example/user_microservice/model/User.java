@@ -11,6 +11,13 @@ import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 
+/**
+ * @author ：ZXM+LJC
+ * @description：User
+ * @date ：2022-12-9 15:49
+ * @version : 1.0
+ */
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)

@@ -6,6 +6,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * @author ：ZXM+LJC
+ * @description：SponsorshipDao
+ * @date ：2022-12-9 15:46
+ * @version : 1.0
+ */
+
 @Repository
 public interface SponsorshipDao extends MongoRepository<Sponsorship, String> {
 
