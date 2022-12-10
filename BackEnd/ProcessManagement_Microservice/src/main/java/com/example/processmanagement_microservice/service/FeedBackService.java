@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author ：ZXM+LJC
@@ -92,12 +93,12 @@ public class FeedBackService {
         saveFile(f,path);
     }*/
 
-    public void saveFile(MultipartFile f,String path) throws IOException {
+    public void saveFile(MultipartFile f,String path,String NewNme) throws IOException {
         File dir=new File(path);
         if(!dir.exists()){
             dir.mkdir();
         }
-        File file=new File(path+f.getOriginalFilename());
+        File file=new File(path+NewNme);
         f.transferTo(file);
     }
 
@@ -109,13 +110,17 @@ public class FeedBackService {
         }
 
         String tmpPath=request.getServletContext().getRealPath("/File/");
-        //String tmpPath="D:\\IDEA_ultimate\\File\\"+picture.getOriginalFilename();
-        saveFile(picture,tmpPath);
         List<String> pathlist=feedBack.getPathList();
-        pathlist.add(tmpPath+picture.getOriginalFilename());
+        /*以下代码段检测图片文件类型并使用uuid进行重命名*/
+        String ofileName=picture.getOriginalFilename();
+        String fileType=ofileName.substring(ofileName.lastIndexOf('.'),ofileName.length());
+        String NewName= UUID.randomUUID()+fileType;
+
+        saveFile(picture,tmpPath,NewName);
+        pathlist.add(tmpPath+NewName);
         feedBack.setPathList(pathlist);
         feedBackDao.save(feedBack);
-        message+=tmpPath+picture.getOriginalFilename();
+        message+="/File/"+NewName;
         return message;
     }
 

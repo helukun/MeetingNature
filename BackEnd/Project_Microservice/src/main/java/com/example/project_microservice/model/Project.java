@@ -32,5 +32,6 @@ public class Project implements Serializable{
     private String describe;
     private String status;
     private String createTime;
+    private String monthFee;
     private List<String> followerList;
 }

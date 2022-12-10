@@ -19,7 +19,7 @@ import java.util.Optional;
  * @author ：ZXM+LJC
  * @description：FeedBackController
  * @date ：2022-12-9 15:43
- * @version : 1.0
+ * @version : 1.1
  */
 
 @RestController
@@ -28,43 +28,43 @@ public class FeedBackController {
     FeedBackService feedBackService;
 
     //good
-    @PostMapping("/processmanagement-microservice/processmanagement/feedback/picture")
+    @PostMapping("/v1.1/processmanagement-microservice/feedback/pictures")
     public String addPicture(String subjectId, String createTime, MultipartFile picture, HttpServletRequest request) throws IOException {
         return feedBackService.addPicture(subjectId,createTime,picture,request);
     }
 
     //good
-    @PostMapping("/processmanagement-microservice/processmanagement/feedback/content")
+    @PostMapping("/v1.1/processmanagement-microservice/feedback/content")
     public void addContent(String subjectId,String createTime,String content){
         feedBackService.addContent(subjectId,createTime,content);
     }
 
     //good
-    @PostMapping("/processmanagement-microservice/processmanagement/feedback/status")
+    @PostMapping("/v1.1/processmanagement-microservice/feedback/status")
     public void changeStatus(String subjectId,String createTime,String status){
         feedBackService.changeStatus(subjectId,createTime,status);
     }
 
     //good
-    @PostMapping("/processmanagement-microservice/processmanagement/feedback")
+    @PostMapping("/v1.1/processmanagement-microservice/feedback")
     public void addFeedBack(String subjectId) throws IOException{
         feedBackService.addFeedBack(subjectId);
     }
 
     //good
-    @DeleteMapping ("/processmanagement-microservice/processmanagement/feedback")
+    @DeleteMapping ("/v1.1/processmanagement-microservice/feedback")
     public void deleteFeedBack(String subjectId,String time) throws IOException{
         feedBackService.deleteFeedBackByPK(subjectId,time);
     }
 
     //good
-    @GetMapping ("/processmanagement-microservice/processmanagement/feedback/SB")
+    @GetMapping ("/v1.1/processmanagement-microservice/feedback/subjectId")
     public List findFBBySB(String subjectId) throws IOException{
         return feedBackService.findFBBySB(subjectId);
     }
 
     //good
-    @GetMapping ("/processmanagement-microservice/processmanagement/feedback/SP")
+    @GetMapping ("/v1.1/processmanagement-microservice/feedback/sponsorId")
     public List findFBBySP(String sponsorId) throws IOException{
         return feedBackService.findFBBySP(sponsorId);
     }

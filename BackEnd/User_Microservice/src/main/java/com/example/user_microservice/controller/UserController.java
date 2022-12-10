@@ -11,8 +11,8 @@ import java.util.Optional;
 /**
  * @author ：ZXM+LJC
  * @description：UserController
- * @date ：2022-12-9 15:48
- * @version : 1.0
+ * @date ：2022-12-10 14:06
+ * @version : 1.
  */
 
 @RestController
@@ -21,37 +21,37 @@ public class UserController {
     private UserService userService;
 
     //good
-    @PostMapping("/user-microservice/user")
+    @PostMapping("/v1.1/user-microservice/users")
     public void addUser(User user){
         userService.addUser(user);
     }
 
     //good
-    @PutMapping("/user-microservice/user")
+    @PutMapping("/v1.1/user-microservice/users")
     public int changeUserInfo(User newUser){
         return userService.changeUserInfo(newUser);
     }
 
     //good
-    @DeleteMapping ("/user-microservice/user")
+    @DeleteMapping ("/v1.1/user-microservice/users")
     public void deleteUser(String id){
         userService.deleteUser(id);
     }
 
     //good
-    @GetMapping("/user-microservice/user/email")
+    @GetMapping("/v1.1/user-microservice/users/email")
     public Optional<User> findUserByEmail(String email){
         return userService.findUserByEmail(email);
     }
 
     //good
-    @GetMapping("/user-microservice/user/id")
+    @GetMapping("/v1.1/user-microservice/users/id")
     public Optional<User> findUserById(String id){
         return userService.findUserById(id);
     }
 
     //good
-    @GetMapping("/user-microservice/user/all")
+    @GetMapping("/v1.1/user-microservice/users")
     public List findAllUser(){
         return userService.findAllUser();
     }

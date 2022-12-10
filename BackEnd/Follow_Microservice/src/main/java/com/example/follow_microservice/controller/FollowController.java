@@ -9,40 +9,48 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author ：ZXM+LJC
+ * @description：FollowController
+ * @date ：2022-12-10 13:50
+ * @version : 1.1
+ */
+
+
 @RestController
 public class FollowController {
     @Autowired
     private FollowService followService;
 
     //good
-    @PostMapping("/follow-microservice/follow")
+    @PostMapping("/v1.1/follow-microservice/follow")
     public int addFollow(Follow newFollow){return followService.addFollow(newFollow);}
 
     //good
-    @DeleteMapping("/follow-microservice/follow")
+    @DeleteMapping("/v1.1/follow-microservice/follow")
     public void deleteFollow(Follow follow){
         followService.deleteByPK(follow.getFollowerId(),follow.getSubjectId());
     }
 
-    @PutMapping("/follow-microservice/follow")
+    @PutMapping("/v1.1/follow-microservice/follow")
     public int changeFollow(Follow newfollow){
         return followService.changeFollow(newfollow);
     }
 
     //good
-    @GetMapping("/follow-microservice/follow")
+    @GetMapping("/v1.1/follow-microservice/follow")
     public Follow findFollowByPK(String followerId,String subjectId){
         return followService.findByPKNo(followerId,subjectId);
     }
 
     //good
-    @GetMapping("/follow-microservice/follow/FO")
+    @GetMapping("/v1.1/follow-microservice/follow/followerId")
     public List<Follow> findAllFollowByFOid(String followerId){
         return followService.findAllFollowByFOid(followerId);
     }
 
     //good
-    @GetMapping("/follow-microservice/follow/SB")
+    @GetMapping("/v1.1/follow-microservice/follow/subjectId")
     public List<Follow> findAllFollowBySBid(String subjectId){
         return followService.findAllFollowBySBid(subjectId);
     }

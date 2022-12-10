@@ -14,7 +14,7 @@ import java.util.Optional;
  * @author ：ZXM+LJC
  * @description：ProjectController
  * @date ：2022-12-9 15:18
- * @version : 1.0
+ * @version : 1.1
  */
 
 @RestController
@@ -23,54 +23,54 @@ public class ProjectController {
     private ProjectService projectService;
 
     //good
-    @PostMapping("/project-microservice/project")
+    @PostMapping("/v1.1/project-microservice/projects")
     public void addProject(Project newProject){
         projectService.addProject(newProject);
     }
 
     //good
-    @PutMapping("/project-microservice/project")
+    @PutMapping("/v1.1/project-microservice/projects")
     public int changeProjectInfo(Project newProject){
         return projectService.changeProjectInfo(newProject);
     }
 
     //good
-    @GetMapping("/project-microservice/project")
+    @GetMapping("/v1.1/project-microservice/projects/Id")
     public Optional<Project> findProjectById(String id){
         return projectService.findProjectById(id);
     }
 
     //goood
-    @GetMapping("/project-microservice/project/all")
+    @GetMapping("/v1.1/project-microservice/projects")
     public List findAllProject(){
         return projectService.findAllProject();
     }
 
     //good
-    @GetMapping("/project-microservice/project/all/page")
+    @GetMapping("/v1.1/project-microservice/projects/page")
     public Page<Project> findAllProjectByPage(int index,int pageSize){
         return projectService.findProjectByPage(index,pageSize);
     }
 
-    @GetMapping("/project-microservice/project/status")
+    @GetMapping("/v1.1/project-microservice/projects/status")
     public List<Project> findAllProjectByStatus(String status){
         return projectService.findProjectByStatus(status);
     }
 
 
-    @GetMapping("/project-microservice/project/time")
+    @GetMapping("/v1.1/project-microservice/projects/time")
     public List<Project> findAllProjectByTime(String startTime,String endTime){
         return projectService.findProjectByTime(startTime,endTime);
     }
 
     //good
-    @GetMapping("/project-microservice/project/org")
+    @GetMapping("/v1.1/project-microservice/projects/organizaation")
     public List<Project> findAllProjectByOrg(String organization){
         return projectService.findProjectByOrg(organization);
     }
 
     //good
-    @DeleteMapping("/project-microservice/project")
+    @DeleteMapping("/v1.1/project-microservice/projects")
     public void deleteProject(String id){
         projectService.deleteProject(id);
     }

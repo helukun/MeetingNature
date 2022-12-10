@@ -12,8 +12,8 @@ import java.util.Optional;
 /**
  * @author ：ZXM+LJC
  * @description：OrederController
- * @date ：2022-12-9 15:44
- * @version : 1.0
+ * @date ：2022-12-10 14:08
+ * @version : 1.1
  */
 
 @RestController
@@ -22,43 +22,43 @@ public class OrderController {
     private OrderService orderService;
 
     //good
-    @PostMapping("/processmanagement-microservice/processmanagement/order")
+    @PostMapping("/v1.1/processmanagement-microservice/orders")
     public int addOrder(Order newOrder){
         return orderService.addOrder(newOrder);
     }
 
     //good
-    @DeleteMapping("/processmanagement-microservice/processmanagement/order")
+    @DeleteMapping("/v1.1/processmanagement-microservice/orders")
     public void deleteOrder(String id){
         orderService.deleteOrder(id);
     }
 
     //good
-    @PutMapping("/processmanagement-microservice/processmanagement/order")
+    @PutMapping("/v1.1/processmanagement-microservice/orders")
     public int changeOrder(Order newOrder){
         return orderService.changeOrder(newOrder);
     }
 
     //good
-    @GetMapping("/processmanagement-microservice/processmanagement/order")
-    public Optional<Order> findOrder(String id){
-        return orderService.findById(id);
+    @GetMapping("/v1.1/processmanagement-microservice/orders/Id")
+    public Optional<Order> findOrder(String Id){
+        return orderService.findById(Id);
     }
 
     //good
-    @GetMapping("/processmanagement-microservice/processmanagement/order/IC")
+    @GetMapping("/v1.1/processmanagement-microservice/orders/incomplete")
     public List findAllIncompleteOrders(String sponsorId){
         return orderService.getAllIncompleteOrders(sponsorId);
     }
 
     //good
-    @GetMapping("/processmanagement-microservice/processmanagement/order/C")
+    @GetMapping("/v1.1/processmanagement-microservice/orders/complete")
     public List findAllCompleteOrders(String sponsorId){
         return orderService.getAllCompleteOrders(sponsorId);
     }
 
     //good
-    @GetMapping("/processmanagement-microservice/processmanagement/order/All")
+    @GetMapping("/v1.1/processmanagement-microservices/order/sponsorId")
     public List findAllOrders(String sponsorId){
         return orderService.getAllOrders(sponsorId);
     }

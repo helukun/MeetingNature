@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class NoticeService {
@@ -69,30 +70,35 @@ public class NoticeService {
         return notice;
     }
 
-    public void saveFile(MultipartFile f,String path) throws IOException {
+    public void saveFile(MultipartFile f,String path,String NewNme) throws IOException {
         File dir=new File(path);
         if(!dir.exists()){
             dir.mkdir();
         }
-        File file=new File(path);
+        File file=new File(path+NewNme);
         f.transferTo(file);
     }
 
-    public int addPicture(String subjectId,String createTime,MultipartFile picture) throws IOException {
-        int legal=0;    //合法性
+    public String addPicture(String subjectId,String createTime,MultipartFile picture,HttpServletRequest request) throws IOException {
+        String message="";    //合法性
         Notice notice=this.findByPKNo(subjectId,createTime);
         if(notice==null){
-            return legal;
+            return message+"Failed!";
         }
-        legal=1;
 
-        String tmpPath="D:\\IDEA_ultimate\\NOFile\\"+picture.getOriginalFilename();
-        saveFile(picture,tmpPath);
+        String tmpPath=request.getServletContext().getRealPath("/File/");
         List<String> pathlist=notice.getPathList();
-        pathlist.add(tmpPath);
+        /*以下代码段检测图片文件类型并使用uuid进行重命名*/
+        String ofileName=picture.getOriginalFilename();
+        String fileType=ofileName.substring(ofileName.lastIndexOf('.'),ofileName.length());
+        String NewName= UUID.randomUUID()+fileType;
+
+        saveFile(picture,tmpPath,NewName);
+        pathlist.add(tmpPath+NewName);
         notice.setPathList(pathlist);
         noticeDao.save(notice);
-        return legal;
+        message+="/File/"+NewName;
+        return message;
     }
 
     public void addContent(String subjectId,String createTime,String content){
