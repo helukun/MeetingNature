@@ -192,4 +192,9 @@ public class FeedBackService {
         }
         return finalList;
     }
+
+    public List findAllFeedBack(){
+        List<FeedBack> allFeedBack =feedBackDao.findAll();
+        return allFeedBack;
+    }
 }
