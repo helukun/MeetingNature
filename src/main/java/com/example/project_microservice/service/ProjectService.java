@@ -1,7 +1,10 @@
 package com.example.project_microservice.service;
 
+import com.alibaba.fastjson.JSON;
 import com.example.project_microservice.model.Project;
 import com.example.project_microservice.dao.ProjectDao;
+import jakarta.servlet.http.HttpServletRequest;
+import org.bson.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -14,11 +17,12 @@ import org.springframework.data.mongodb.core.query.Update;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author ：ZXM+LJC
@@ -60,6 +64,7 @@ public class ProjectService {
         project.setCreateTime(String.valueOf(LocalDateTime.now()));
         project.setStatus("yellow");
         project.setFollowerList(new ArrayList<>());
+        project.setPicPaths(new ArrayList<>());
         int exist=this.isExist(project.getId());
         if(exist!=1){
             projectDao.save(project);
@@ -75,16 +80,34 @@ public class ProjectService {
         return projectList;
     }
 
-    public Optional<Project> findProjectById(String id){
-        Optional<Project> project=null;
+    public List findAllProjectInfo(){
+        List<Project> proList=this.findAllProject();
+        int size=proList.size();
+        List res=new ArrayList<>();
+        for(int i=0;i<size;i++){
+            Map map=new HashMap();
+            map.put("id",proList.get(i).getId());
+            map.put("projectName",proList.get(i).getProjectName());
+            map.put("organization",proList.get(i).getOrganization());
+            map.put("describe",proList.get(i).getDescribe());
+            map.put("picPaths",proList.get(i).getPicPaths());
+            String param= JSON.toJSONString(map);
+            res.add(JSON.parse(param));
+        }
+        return res;
+    }
+
+    public Project findProjectById(String id){
+        Project project=null;
 
         Project checkProject3=new Project();
         checkProject3.setId(id);
         Example<Project> projectExample=Example.of(checkProject3);
         long count2 = projectDao.count(projectExample);
+        List<Project> projectList=projectDao.findAll(projectExample);
 
         if((int)count2!=0){
-            project = projectDao.findById(id);
+            project = projectList.get(0);
             System.out.println("找到用户！");
         }
         else{
@@ -95,8 +118,8 @@ public class ProjectService {
     }
 
     public List<String> getFollowList(String id){
-        Optional<Project> project=this.findProjectById(id);
-        return project.get().getFollowerList();
+        Project project=this.findProjectById(id);
+        return project.getFollowerList();
     }
 
     public int changeProjectInfo(Project newProject){
@@ -106,8 +129,6 @@ public class ProjectService {
             System.out.println("该项目不存在");
             return 0;
         }
-
-        Optional<Project> OldUser=this.findProjectById(newProject.getId());
 
         int legal=1;
         if(newProject.getProjectName().length()>15||
@@ -129,7 +150,21 @@ public class ProjectService {
     }
 
     public void deleteProject(String id){
-        projectDao.deleteById(id);
+        int exist=this.isExist(id);
+        if(exist==0){
+            return;
+        }
+        Project project=this.findProjectById(id);
+        List<String> pathList=project.getPicPaths();
+        for(String e:pathList){
+            File myObj = new File(e);
+            if (myObj.delete()) {
+                System.out.println("Deleted the file: " + myObj.getName());
+            } else {
+                System.out.println("Failed to delete the file.");
+            }
+        }
+        projectDao.delete(project);
     }
 
     public List<Project> findProjectByStatus(String status){
@@ -162,9 +197,74 @@ public class ProjectService {
         return projectList;
     }
 
-    public Page<Project> findProjectByPage(int index,int pageSize){
+    public Page findProjectByPage(int index,int pageSize){
         Pageable pageable= PageRequest.of(index-1,pageSize);
         Page<Project> projectPage=projectDao.findAll(pageable);
         return projectPage;
+    }
+
+    public void saveFile(MultipartFile f, String path, String NewNme) throws IOException {
+        File dir=new File(path);
+        if(!dir.exists()){
+            dir.mkdir();
+        }
+        File file=new File(path+NewNme);
+        f.transferTo(file);
+    }
+
+    public String addPicture(String id, MultipartFile picture, HttpServletRequest request) throws IOException {
+        String message="";    //合法性
+        Project project=this.findProjectById(id);
+        if(project==null){
+            return message+"Failed!";
+        }
+
+        String tmpPath=request.getServletContext().getRealPath("/File/");
+        List<String> pathlist=project.getPicPaths();
+        /*以下代码段检测图片文件类型并使用uuid进行重命名*/
+        String fileName=picture.getOriginalFilename();
+        String fileType=fileName.substring(fileName.lastIndexOf('.'),fileName.length());
+        String NewName= UUID.randomUUID()+fileType;
+
+        saveFile(picture,tmpPath,NewName);
+        pathlist.add(tmpPath+NewName);
+        project.setPicPaths(pathlist);
+        projectDao.save(project);
+        message+="/File/"+NewName;
+        return message;
+    }
+
+    public List displayRPInfo(String n){
+        int mysize= Integer.parseInt(n);
+        Random random = new Random();
+        List<Project> proList=this.findAllProject();
+        int size=proList.size();
+        int[] visit=new int[size];
+        for(int i=0;i<size;i++){
+            visit[i]=0;
+        }
+        List<Project> tmp=new ArrayList<>();
+        for(int i=0;i<mysize;){
+            int rd=random.nextInt(size);
+            if(visit[rd]==0){
+                tmp.add(proList.get(rd));
+                visit[rd]=1;
+                i++;
+            }
+        }
+
+        List res=new ArrayList<>();
+        for(int i=0;i<mysize;i++){
+            Map map=new HashMap();
+            map.put("id",tmp.get(i).getId());
+            map.put("projectName",tmp.get(i).getProjectName());
+            map.put("organization",tmp.get(i).getOrganization());
+            map.put("describe",tmp.get(i).getDescribe());
+            map.put("picPaths",tmp.get(i).getPicPaths());
+            String param= JSON.toJSONString(map);
+            res.add(JSON.parse(param));
+        }
+
+        return res;
     }
 }

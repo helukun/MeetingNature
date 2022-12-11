@@ -33,5 +33,6 @@ public class Project implements Serializable{
     private String status;
     private String createTime;
     private String monthFee;
+    private List<String> picPaths;
     private List<String> followerList;
 }
