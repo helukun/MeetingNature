@@ -113,13 +113,14 @@ public class NoticeService {
         noticeDao.save(notice);
     }
 
-    public void addNotice(String subjectId) throws IOException {
-        int exist=this.isExist(subjectId,String.valueOf(LocalDateTime.now()));
+    public void addNotice(Notice newNotice) throws IOException {
+        int exist=this.isExist(newNotice.getSubjectId(),String.valueOf(LocalDateTime.now()));
         Notice notice=new Notice();
         notice.setId(this.setNextId())
-                .setSubjectId(subjectId)
+                .setSubjectId(newNotice.getSubjectId())
                 .setCreateTime(String.valueOf(LocalDateTime.now()))
                 .setStatus("incomplete")
+                .setTitle(newNotice.getTitle())
                 .setPathList(new ArrayList<>());
         noticeDao.save(notice);
     }
