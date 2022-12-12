@@ -7,6 +7,9 @@ import com.netflix.discovery.converters.Auto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -113,15 +116,22 @@ public class NoticeService {
         noticeDao.save(notice);
     }
 
-    public void addNotice(Notice newNotice) throws IOException {
-        int exist=this.isExist(newNotice.getSubjectId(),String.valueOf(LocalDateTime.now()));
+    public void addNotice(String subjectId) throws IOException {
+        int exist=this.isExist(subjectId,String.valueOf(LocalDateTime.now()));
         Notice notice=new Notice();
         notice.setId(this.setNextId())
-                .setSubjectId(newNotice.getSubjectId())
+                .setSubjectId(subjectId)
                 .setCreateTime(String.valueOf(LocalDateTime.now()))
                 .setStatus("incomplete")
-                .setTitle(newNotice.getTitle())
+                .setContent("")
+                .setTitle("")
                 .setPathList(new ArrayList<>());
+        /*if(newNotice.getTitle()!=null){
+            notice.setTitle(newNotice.getTitle());
+        }
+        else{
+            notice.setTitle("");
+        }*/
         noticeDao.save(notice);
     }
 
@@ -149,6 +159,17 @@ public class NoticeService {
         Example<Notice> noticeExample=Example.of(checkNOT);
         List<Notice> list=noticeDao.findAll(noticeExample);
         return list;
+    }
+
+    public Page findNOTBySBPlusPage(String subjectId, int index, int pageSize){
+        Notice checkNOT=new Notice();
+        checkNOT.setSubjectId(subjectId);
+        Example<Notice> noticeExample=Example.of(checkNOT);
+
+        Pageable pageable= PageRequest.of(index-1,pageSize);
+        Page<Notice> noticePage=noticeDao.findAll(noticeExample,pageable);
+
+        return noticePage;
     }
 
     public List<Notice> findNOTByUS(String followerId){

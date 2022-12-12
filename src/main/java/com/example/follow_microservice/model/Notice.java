@@ -23,7 +23,7 @@ public class Notice implements Serializable {
     private String id;
     @Context
     private String content;
-    private String title;
+    private String title;//false
     private String subjectId;
     private String createTime;
     private String status;

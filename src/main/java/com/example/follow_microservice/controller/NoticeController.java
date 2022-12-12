@@ -3,6 +3,7 @@ package com.example.follow_microservice.controller;
 import com.example.follow_microservice.model.Notice;
 import com.example.follow_microservice.service.NoticeService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,14 +35,14 @@ public class NoticeController {
         noticeService.addContent(subjectId,createTime,content);
     }
 
-    @PostMapping("/v1.1/follow-microservice/notice/status")
+    @PutMapping("/v1.1/follow-microservice/notice/status")
     public void changeStatus(String subjectId,String createTime,String status){
         noticeService.changeStatus(subjectId,createTime,status);
     }
 
     @PostMapping("/v1.1/follow-microservice/notice")
-    public void addNotice(Notice newNotice) throws IOException{
-        noticeService.addNotice(newNotice);
+    public void addNotice(String subjectId) throws IOException{
+        noticeService.addNotice(subjectId);
     }
 
     @DeleteMapping ("/v1.1/follow-microservice/notice")
@@ -57,5 +58,11 @@ public class NoticeController {
     @GetMapping ("/v1.1/follow-microservice/notice/followerId")
     public List findNOTByUS(String followerId) throws IOException{
         return noticeService.findNOTByUS(followerId);
+    }
+
+    //good
+    @GetMapping ("/v1.1/follow-microservice/notice/SBPlusPage")
+    public Page findNOTBySBPlusPage(String subjectId, int index, int pageSize) throws IOException {
+        return noticeService.findNOTBySBPlusPage(subjectId,index,pageSize);
     }
 }
