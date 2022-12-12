@@ -32,6 +32,24 @@ public class ProjectController {
     }
 
     //good
+    @PostMapping("/v1.1/project-microservice/projects/picture")
+    public String addPicture(String id, MultipartFile picture, HttpServletRequest request) throws IOException {
+        return projectService.addPicture(id,picture,request);
+    }
+
+    //good
+    @DeleteMapping("/v1.1/project-microservice/projects")
+    public void deleteProject(String id){
+        projectService.deleteProject(id);
+    }
+
+    //good
+    @DeleteMapping("/v1.1/project-microservice/projects/deletePic")
+    public void deletePicByProId(String id,String picPath){
+        projectService.deletePicByProId(id,picPath);
+    }
+
+    //good
     @PutMapping("/v1.1/project-microservice/projects")
     public int changeProjectInfo(Project newProject){
         return projectService.changeProjectInfo(newProject);
@@ -43,7 +61,7 @@ public class ProjectController {
         return projectService.findProjectById(id);
     }
 
-    //goood
+    //good
     @GetMapping("/v1.1/project-microservice/projects")
     public List findAllProject(){
         return projectService.findAllProject();
@@ -67,25 +85,26 @@ public class ProjectController {
     }
 
     //good
-    @GetMapping("/v1.1/project-microservice/projects/organizaation")
-    public List<Project> findAllProjectByOrg(String organization){
+    @GetMapping("/v1.1/project-microservice/projects/organization")
+    public List findAllProjectByOrg(String organization){
         return projectService.findProjectByOrg(organization);
     }
 
     //good
-    @DeleteMapping("/v1.1/project-microservice/projects")
-    public void deleteProject(String id){
-        projectService.deleteProject(id);
+    @GetMapping("/v1.1/project-microservice/proId/organization")
+    public List findAllProIdByOrg(String organization){
+        return projectService.findProIdByOrg(organization);
+    }
+
+    //good
+    @GetMapping("/v1.1/project-microservice/projects/organizationPlusPage")
+    public Page findAllProjectByOrgPlusPage(String organization,int index,int pageSize){
+        return projectService.findProjectByOrgPlusPage(organization,index,pageSize);
     }
 
     //good
     @GetMapping("/v1.1/project-microservice/projects/random")
     public List disRPInfo(String size){
         return projectService.displayRPInfo(size);
-    }
-
-    @PostMapping("/v1.1/project-microservice/projects/picture")
-    public String addPicture(String id, MultipartFile picture, HttpServletRequest request) throws IOException {
-        return projectService.addPicture(id,picture,request);
     }
 }

@@ -36,6 +36,7 @@ public class ProjectService {
     @Autowired
     private ProjectDao projectDao;
 
+
     public String setNextId(){
         List<Project> projectList=projectDao.findAll();
         int curMaxId=0;
@@ -45,6 +46,7 @@ public class ProjectService {
         int result=curMaxId+1;
         return result+"";
     }
+
 
     public int isExist(String id){
         Project checkProject=new Project();
@@ -59,12 +61,25 @@ public class ProjectService {
         return result;
     }
 
+
     public void addProject(Project project){
         project.setId(this.setNextId());
         project.setCreateTime(String.valueOf(LocalDateTime.now()));
-        project.setStatus("yellow");
+        project.setStatus(project.getStatus());
         project.setFollowerList(new ArrayList<>());
         project.setPicPaths(new ArrayList<>());
+        if(project.getProjectName()==null){
+            project.setProjectName("");
+        }
+        if(project.getOrganization()==null){
+            project.setOrganization("");
+        }
+        if(project.getDescribe()==null){
+            project.setDescribe("");
+        }
+        if(project.getMonthFee()==null){
+            project.setMonthFee("");
+        }
         int exist=this.isExist(project.getId());
         if(exist!=1){
             projectDao.save(project);
@@ -74,6 +89,143 @@ public class ProjectService {
             System.out.println("该项目已存在，无法再次添加！");
         }
     }
+
+    public void changeProjectStatus(String id,String status){
+        Project project=this.findProjectById(id);
+        project.setStatus(status);
+        projectDao.save(project);
+    }
+
+
+    public void saveFile(MultipartFile f, String path, String NewNme) throws IOException {
+        File dir=new File(path);
+        if(!dir.exists()){
+            dir.mkdir();
+        }
+        File file=new File(path+NewNme);
+        f.transferTo(file);
+    }
+
+    public String addPicture(String id, MultipartFile picture, HttpServletRequest request) throws IOException {
+        String message="";    //合法性
+        Project project=this.findProjectById(id);
+        if(project==null){
+            return message+"Failed!";
+        }
+
+        String tmpPath=request.getServletContext().getRealPath("/File/");
+        List<String> pathlist=project.getPicPaths();
+        /*以下代码段检测图片文件类型并使用uuid进行重命名*/
+        String fileName=picture.getOriginalFilename();
+        String fileType=fileName.substring(fileName.lastIndexOf('.'),fileName.length());
+        String NewName= UUID.randomUUID()+fileType;
+
+        saveFile(picture,tmpPath,NewName);
+        pathlist.add(tmpPath+NewName);
+        project.setPicPaths(pathlist);
+        projectDao.save(project);
+        message+="/File/"+NewName;
+        return message;
+    }
+
+
+    public void deleteProject(String id){
+        int exist=this.isExist(id);
+        if(exist==0){
+            return;
+        }
+        Project project=this.findProjectById(id);
+        List<String> pathList=project.getPicPaths();
+        for(String e:pathList){
+            File myObj = new File(e);
+            if (myObj.delete()) {
+                System.out.println("Deleted the file: " + myObj.getName());
+            } else {
+                System.out.println("Failed to delete the file.");
+            }
+        }
+        projectDao.delete(project);
+    }
+
+
+    public void deletePicByProId(String id,String picPath){
+        Project project=this.findProjectById(id);
+        if(project==null){
+            return;
+        }
+        //获取到picPath
+        List<String> pathList=project.getPicPaths();
+        //删除磁盘文件
+        for(String s:pathList){
+            if(s.equals(picPath)){
+                File myObj = new File(s);
+                if (myObj.delete()) {
+                    System.out.println("Deleted the file: " + myObj.getName());
+                } else {
+                    System.out.println("Failed to delete the file.");
+                }
+            }
+        }
+        //删除图片路径List中的记录
+        Iterator<String> iterator = pathList.iterator();
+        while(iterator.hasNext()) {
+            String curPath = iterator.next();
+            if (curPath.equals(picPath)) {
+                iterator.remove();
+            }
+        }
+        //保存修改
+        project.setPicPaths(pathList);
+        projectDao.save(project);
+    }
+
+
+    public int changeProjectInfo(Project newProject){
+        int exist=this.isExist(newProject.getId());
+
+        if(exist==0){
+            System.out.println("该项目不存在");
+            return 0;
+        }
+
+        int legal=1;
+        if((newProject.getProjectName()!=null&&newProject.getProjectName().length()>15)||
+                (newProject.getProjectName()!=null&&newProject.getProjectName().length()==0)||
+                (newProject.getProjectName()!=null&&newProject.getProjectName().contains(" "))||
+                (newProject.getDescribe()!=null&&newProject.getDescribe().length()>200)
+        ){
+            legal=0;
+        }
+
+        if(legal==1){
+            Project oldProject=this.findProjectById(newProject.getId());
+
+            if(newProject.getProjectName()!=null){
+                oldProject.setProjectName(newProject.getProjectName());
+            }
+            if(newProject.getOrganization()!=null){
+                oldProject.setOrganization(newProject.getOrganization());
+            }
+            if(newProject.getDescribe()!=null){
+                oldProject.setDescribe(newProject.getDescribe());
+            }
+            if(newProject.getStatus()!=null){
+                oldProject.setStatus(newProject.getStatus());
+            }
+            if(newProject.getMonthFee()!=null){
+                oldProject.setMonthFee(newProject.getMonthFee());
+            }
+
+            projectDao.save(oldProject);
+
+            System.out.println("修改成功！");
+        }
+        else{
+            System.out.println("修改失败！");
+        }
+        return legal;
+    }
+
 
     public List findAllProject(){
         List<Project> projectList = projectDao.findAll();
@@ -122,50 +274,6 @@ public class ProjectService {
         return project.getFollowerList();
     }
 
-    public int changeProjectInfo(Project newProject){
-        int exist=this.isExist(newProject.getId());
-
-        if(exist==0){
-            System.out.println("该项目不存在");
-            return 0;
-        }
-
-        int legal=1;
-        if(newProject.getProjectName().length()>15||
-                newProject.getProjectName().length()==0||
-                newProject.getProjectName().contains(" ")||
-                newProject.getDescribe().length()>200
-        ){
-            legal=0;
-        }
-
-        if(legal==1){
-            projectDao.save(newProject);
-            System.out.println("修改成功！");
-        }
-        else{
-            System.out.println("修改失败！");
-        }
-        return legal;
-    }
-
-    public void deleteProject(String id){
-        int exist=this.isExist(id);
-        if(exist==0){
-            return;
-        }
-        Project project=this.findProjectById(id);
-        List<String> pathList=project.getPicPaths();
-        for(String e:pathList){
-            File myObj = new File(e);
-            if (myObj.delete()) {
-                System.out.println("Deleted the file: " + myObj.getName());
-            } else {
-                System.out.println("Failed to delete the file.");
-            }
-        }
-        projectDao.delete(project);
-    }
 
     public List<Project> findProjectByStatus(String status){
         Project checkProject=new Project();
@@ -189,12 +297,24 @@ public class ProjectService {
         return projectList;
     }
 
-    public List<Project> findProjectByOrg(String organization){
+    public List findProjectByOrg(String organization){
         Project checkProject=new Project();
         checkProject.setOrganization(organization);
         Example<Project> projectExample=Example.of(checkProject);
         List<Project> projectList=projectDao.findAll(projectExample);
         return projectList;
+    }
+
+    public List findProIdByOrg(String organization){
+        Project checkProject=new Project();
+        checkProject.setOrganization(organization);
+        Example<Project> projectExample=Example.of(checkProject);
+        List<Project> projectList=projectDao.findAll(projectExample);
+        List res=new ArrayList<>();
+        for(Project p:projectList){
+            res.add(p.getId());
+        }
+        return  res;
     }
 
     public Page findProjectByPage(int index,int pageSize){
@@ -203,35 +323,15 @@ public class ProjectService {
         return projectPage;
     }
 
-    public void saveFile(MultipartFile f, String path, String NewNme) throws IOException {
-        File dir=new File(path);
-        if(!dir.exists()){
-            dir.mkdir();
-        }
-        File file=new File(path+NewNme);
-        f.transferTo(file);
-    }
+    public Page findProjectByOrgPlusPage(String organization,int index,int pageSize){
+        Project checkProject=new Project();
+        checkProject.setOrganization(organization);
+        Example<Project> projectExample=Example.of(checkProject);
 
-    public String addPicture(String id, MultipartFile picture, HttpServletRequest request) throws IOException {
-        String message="";    //合法性
-        Project project=this.findProjectById(id);
-        if(project==null){
-            return message+"Failed!";
-        }
+        Pageable pageable= PageRequest.of(index-1,pageSize);
+        Page<Project> projectPage=projectDao.findAll(projectExample,pageable);
 
-        String tmpPath=request.getServletContext().getRealPath("/File/");
-        List<String> pathlist=project.getPicPaths();
-        /*以下代码段检测图片文件类型并使用uuid进行重命名*/
-        String fileName=picture.getOriginalFilename();
-        String fileType=fileName.substring(fileName.lastIndexOf('.'),fileName.length());
-        String NewName= UUID.randomUUID()+fileType;
-
-        saveFile(picture,tmpPath,NewName);
-        pathlist.add(tmpPath+NewName);
-        project.setPicPaths(pathlist);
-        projectDao.save(project);
-        message+="/File/"+NewName;
-        return message;
+        return projectPage;
     }
 
     public List displayRPInfo(String n){
