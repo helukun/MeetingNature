@@ -1,5 +1,6 @@
 package com.example.processmanagement_microservice.service;
 
+import com.example.processmanagement_microservice.model.FeedBack;
 import com.example.processmanagement_microservice.model.Order;
 import com.example.processmanagement_microservice.dao.OrderDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,9 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -36,21 +39,26 @@ public class OrderService {
         orderDao.deleteById(id);
     }
 
-    public int addOrder(Order order){
-        boolean exists=orderDao.existsById(order.getOrderId());
-        int success=0;
-        if(exists==true){
-            System.out.println("订单已存在，无法添加！");
+    public String setNextId(){
+        List<Order> OrderList=orderDao.findAll();
+        int curMaxId=0;
+        for(Order o:OrderList){
+            curMaxId=Math.max(curMaxId,Integer.parseInt(o.getOrderId()));
         }
-        else{
-            orderDao.save(order);
-            success=1;
-            System.out.println("添加成功！");
-        }
-        return success;
+        int result=curMaxId+1;
+        return result+"";
     }
 
-    public int changeOrder(Order newOrder){
+    /*给订单也设置为了自生成的id，只要没有出现报错，则永远添加成功，所以返回1*/
+    public int addOrder(Order order){
+        order.setOrderId(setNextId());
+        order.setStatus("incomplete");
+        order.setSetupTime(String.valueOf(LocalDateTime.now()));
+        return 1;
+    }
+
+    /*/
+    public int changeOrderStatus(Order newOrder){
         boolean exists=orderDao.existsById(newOrder.getOrderId());
         int success=0;
         if(exists!=true){
@@ -58,10 +66,31 @@ public class OrderService {
         }
         else{
             orderDao.save(newOrder);
-            success=1;
             System.out.println("修改成功！");
         }
         return success;
+    }*/
+
+    /*将订单的状态从incomplete改为complete*/
+    /*如果做出修改则返回1，订单已经为已完成或者未存在返回0*/
+    public int changeOrderStatus(String orderId){
+        boolean exists=orderDao.existsById(orderId);
+        if(exists==false)
+            return 0;
+
+        Order orderCheck=new Order();
+        orderCheck.setOrderId(orderId);
+        Example<Order> orderExample=Example.of(orderCheck);
+        List<Order> originalOrderList=orderDao.findAll(orderExample);
+        Order originalOrder=originalOrderList.get(0);
+        if(originalOrder.getStatus().equals("incomplete"))
+        {
+            originalOrder.setStatus("complete");
+            orderDao.save(originalOrder);
+            return 1;
+        }
+        else
+            return 0;
     }
 
     public List getAllCompleteOrders(String sponsorId){

@@ -167,6 +167,27 @@ public class FeedBackService {
         feedBackDao.delete(feedBack);
     }
 
+    public void deleteFBById(String id){
+        FeedBack feedBack=null;
+        FeedBack checkFeedBack=new FeedBack();
+        checkFeedBack.setId(id);
+        Example<FeedBack> feedBackExample=Example.of(checkFeedBack);
+        List<FeedBack> feedBackList=feedBackDao.findAll(feedBackExample);
+        if(feedBackList.size()!=0) {
+            feedBack=feedBackList.get(0);
+            List<String> pathlist=feedBack.getPathList();
+            for(String e:pathlist){
+                File myObj = new File(e);
+                if (myObj.delete()) {
+                    System.out.println("Deleted the file: " + myObj.getName());
+                } else {
+                    System.out.println("Failed to delete the file.");
+                }
+            }
+            feedBackDao.delete(feedBack);
+        }
+    }
+
     //反馈所有内容
     public List<FeedBack> findFBBySB(String subjectId){
         FeedBack checkFB=new FeedBack();

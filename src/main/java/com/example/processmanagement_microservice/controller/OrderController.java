@@ -35,8 +35,8 @@ public class OrderController {
 
     //good
     @PutMapping("/v1.1/processmanagement-microservice/orders")
-    public int changeOrder(Order newOrder){
-        return orderService.changeOrder(newOrder);
+    public int changeOrder(String orderId){
+        return orderService.changeOrderStatus(orderId);
     }
 
     //good

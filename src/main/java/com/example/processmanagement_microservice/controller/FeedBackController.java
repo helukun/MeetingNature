@@ -1,18 +1,22 @@
 package com.example.processmanagement_microservice.controller;
 
-
 import com.example.processmanagement_microservice.dao.OrderDao;
 import com.example.processmanagement_microservice.model.FeedBack;
 import com.example.processmanagement_microservice.model.Order;
 import com.example.processmanagement_microservice.service.FeedBackService;
 import com.example.processmanagement_microservice.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -30,7 +34,17 @@ public class FeedBackController {
     //good
     @PostMapping("/v1.1/processmanagement-microservice/feedback/pictures")
     public String addPicture(String subjectId, String createTime, MultipartFile picture, HttpServletRequest request) throws IOException {
-        return feedBackService.addPicture(subjectId,createTime,picture,request);
+        return feedBackService.addPicture(subjectId,createTime, picture,request);
+        //Map map = request.getParameterMap();
+        //Object o = (map.get("picture"));
+        //String paravalue = ((String[])map.get("picture"))[0];
+        //File file = new File(paravalue);
+        //FileInputStream input = new FileInputStream(file);
+        //MultipartFile multipartFile = new MockMultipartFile(file.getName(),input);
+        //Map map = request.getParameterMap();
+        //String picture1 = (String)map.get("picture");
+        //MultipartFile multipartFile = (MultipartFile)map.get("picture");
+        //MultipartFile multipartFile = new MockMultipartFile();
     }
 
     //good
@@ -40,7 +54,7 @@ public class FeedBackController {
     }
 
     //good
-    @PostMapping("/v1.1/processmanagement-microservice/feedback/status")
+    @PutMapping("/v1.1/processmanagement-microservice/feedback/status")
     public void changeStatus(String subjectId,String createTime,String status){
         feedBackService.changeStatus(subjectId,createTime,status);
     }
@@ -55,6 +69,12 @@ public class FeedBackController {
     @DeleteMapping ("/v1.1/processmanagement-microservice/feedback")
     public void deleteFeedBack(String subjectId,String time) throws IOException{
         feedBackService.deleteFeedBackByPK(subjectId,time);
+    }
+
+    //good
+    @DeleteMapping ("/v1.1/processmanagement-microservice/feedback/Id")
+    public void deleteFeedBackById(String id) throws IOException{
+        feedBackService.deleteFBById(id);
     }
 
     //good

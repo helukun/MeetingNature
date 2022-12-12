@@ -71,7 +71,8 @@ public class SponsorshipService {
         int exist=this.isExist(sponsorid,subjectid);
         int success=0;
         if(exist==0){
-            sponsorship.setId(this.setNextId());
+            sponsorship.setId(this.setNextId())
+                    .setStatus("green");
             sponsorshipDao.save(sponsorship);
             success=1;
             System.out.println("增加成功");
