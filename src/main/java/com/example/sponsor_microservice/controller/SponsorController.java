@@ -36,6 +36,8 @@ public class SponsorController {
     public List findFeedBackInfoByPage(String index,String pageSize,String sponsorId){
         return sponsorService.findFeedBackInfoByPage(index,pageSize,sponsorId);
     }
+
+    //good
     @PostMapping("/v1.0/sponsor-microservice/follow/add")
     public void addFollow(String followerId,String subjectId){
         sponsorService.addFollow(followerId,subjectId);
