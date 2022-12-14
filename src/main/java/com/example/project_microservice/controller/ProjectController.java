@@ -1,6 +1,7 @@
 package com.example.project_microservice.controller;
 
 import com.example.project_microservice.model.Project;
+import com.example.project_microservice.service.OSSService;
 import com.example.project_microservice.service.ProjectService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,10 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
+
+    @Autowired
+    private OSSService ossService;
+
     //good
     @PostMapping("/v1.1/project-microservice/projects")
     public void addProject(Project newProject){
@@ -35,6 +40,18 @@ public class ProjectController {
     @PostMapping("/v1.1/project-microservice/projects/picture")
     public String addPicture(String id, MultipartFile picture, HttpServletRequest request) throws IOException {
         return projectService.addPicture(id,picture,request);
+    }
+
+    //good
+    @PostMapping("/v1.1/project-microservice/projects/picture/con")
+    public String addPicCon(String id, MultipartFile picture){
+        return projectService.addPicCon(id,picture,"sss");
+    }
+
+
+    @PostMapping("/v1.1/project-microservice/projects/picPathOnly")
+    public String addPicPathOnly(String id,String newPath){
+        return projectService.addPicPathOnly(id,newPath);
     }
 
     //good

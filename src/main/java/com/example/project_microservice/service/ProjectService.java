@@ -36,6 +36,9 @@ public class ProjectService {
     @Autowired
     private ProjectDao projectDao;
 
+    @Autowired
+    private OSSService ossService;
+
 
     public String setNextId(){
         List<Project> projectList=projectDao.findAll();
@@ -105,6 +108,38 @@ public class ProjectService {
         File file=new File(path+NewNme);
         f.transferTo(file);
     }
+
+    public String addPicCon(String id, MultipartFile picture,String storagePath){
+        String message="";    //合法性
+        Project project=this.findProjectById(id);
+        if(project==null){
+            return message+"Failed!";
+        }
+
+        String res=ossService.uploadFile(picture,storagePath);
+        List tmp=project.getPicPaths();
+        tmp.add("https://meeting-nature.oss-cn-shanghai.aliyuncs.com/"+res);
+        project.setPicPaths(tmp);
+        projectDao.save(project);
+
+        return  "https://meeting-nature.oss-cn-shanghai.aliyuncs.com/"+res;
+    }
+
+
+    public String addPicPathOnly(String id,String newPath){
+        String message="";    //合法性
+        Project project=this.findProjectById(id);
+        if(project==null){
+            return message+"Failed!";
+        }
+        List tmp=project.getPicPaths();
+        tmp.add("https://meeting-nature.oss-cn-shanghai.aliyuncs.com/"+newPath);
+        project.setPicPaths(tmp);
+        projectDao.save(project);
+
+        return  "https://meeting-nature.oss-cn-shanghai.aliyuncs.com/"+newPath;
+    }
+
 
     public String addPicture(String id, MultipartFile picture, HttpServletRequest request) throws IOException {
         String message="";    //合法性
