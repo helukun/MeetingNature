@@ -116,6 +116,22 @@ public class NoticeService {
         noticeDao.save(notice);
     }
 
+
+    public String addPicPathOnly(String subjectId,String createTime,String newPath){
+        String message="";    //合法性
+        Notice notice=this.findByPKNo(subjectId,createTime);
+        if(notice==null){
+            return message+"Failed!";
+        }
+
+        List tmp=notice.getPathList();
+        tmp.add("https://meeting-nature.oss-cn-shanghai.aliyuncs.com/"+newPath);
+        notice.setPathList(tmp);
+        noticeDao.save(notice);
+
+        return "https://meeting-nature.oss-cn-shanghai.aliyuncs.com/"+newPath;
+    }
+
     public void addNotice(String subjectId) throws IOException {
         int exist=this.isExist(subjectId,String.valueOf(LocalDateTime.now()));
         Notice notice=new Notice();

@@ -35,6 +35,11 @@ public class NoticeController {
         noticeService.addContent(subjectId,createTime,content);
     }
 
+    @PostMapping("/v1.1/follow-microservice/notice/picPathOnly")
+    public String addPicPathOnly(String subjectId,String createTime,String newPath){
+        return noticeService.addPicPathOnly(subjectId,createTime,newPath);
+    }
+
     @PutMapping("/v1.1/follow-microservice/notice/status")
     public void changeStatus(String subjectId,String createTime,String status){
         noticeService.changeStatus(subjectId,createTime,status);
