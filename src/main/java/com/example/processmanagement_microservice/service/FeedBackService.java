@@ -8,6 +8,7 @@ import com.example.processmanagement_microservice.dao.OrderDao;
 import com.example.processmanagement_microservice.model.Sponsorship;
 import com.netflix.discovery.converters.Auto;
 import jakarta.servlet.http.HttpServletRequest;
+import org.bouncycastle.pqc.crypto.newhope.NHOtherInfoGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -41,6 +42,8 @@ public class FeedBackService {
     private FeedBackDao feedBackDao;
     @Autowired
     private SponsorshipService sponsorshipService;
+    @Autowired
+    private OSSService ossService;
 
     public int isExist(String subjectId,String time){
         FeedBack checkFeedBack=new FeedBack();
@@ -100,6 +103,48 @@ public class FeedBackService {
         }
         File file=new File(path+NewNme);
         f.transferTo(file);
+    }
+
+    public String addPicCon(String subjectId,String createTime,MultipartFile picture,String storagePath){
+        String message="";    //合法性
+        FeedBack feedBack=this.findByPKNo(subjectId,createTime);
+        if(feedBack==null){
+            return message+"Failed!";
+        }
+
+        String res=ossService.uploadFile(picture,storagePath);
+        List tmp=feedBack.getPathList();
+        tmp.add("https://meeting-nature.oss-cn-shanghai.aliyuncs.com/"+res);
+        feedBack.setPathList(tmp);
+        feedBackDao.save(feedBack);
+
+        return "https://meeting-nature.oss-cn-shanghai.aliyuncs.com/"+res;
+    }
+
+    public String addPicOnly(String subjectId,String createTime,MultipartFile picture,String storagePath){
+        String message="";    //合法性
+        FeedBack feedBack=this.findByPKNo(subjectId,createTime);
+        if(feedBack==null){
+            return message+"Failed!";
+        }
+
+        String res=ossService.uploadFile(picture,storagePath);
+        return res;
+    }
+
+    public String addPicPathOnly(String subjectId,String createTime,String newPath){
+        String message="";    //合法性
+        FeedBack feedBack=this.findByPKNo(subjectId,createTime);
+        if(feedBack==null){
+            return message+"Failed!";
+        }
+
+        List tmp=feedBack.getPathList();
+        tmp.add("https://meeting-nature.oss-cn-shanghai.aliyuncs.com/"+newPath);
+        feedBack.setPathList(tmp);
+        feedBackDao.save(feedBack);
+
+        return "https://meeting-nature.oss-cn-shanghai.aliyuncs.com/"+newPath;
     }
 
     public String addPicture(String subjectId,String createTime,MultipartFile picture,HttpServletRequest request) throws IOException {

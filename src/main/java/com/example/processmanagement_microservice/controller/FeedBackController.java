@@ -47,6 +47,16 @@ public class FeedBackController {
         //MultipartFile multipartFile = new MockMultipartFile();
     }
 
+    @PostMapping("/v1.1/processmanagement-microservice/feedback/picturesOnly")
+    public String addPicOnly(String subjectId,String createTime,MultipartFile picture,String storagePath){
+        return feedBackService.addPicOnly(subjectId,createTime,picture,"feedBackPic");
+    }
+
+    @PostMapping("/v1.1/processmanagement-microservice/feedback/picPathOnly")
+    public String addPicPathOnly(String subjectId,String createTime,String newPath){
+        return feedBackService.addPicPathOnly(subjectId,createTime,newPath);
+    }
+
     //good
     @PostMapping("/v1.1/processmanagement-microservice/feedback/content")
     public void addContent(String subjectId,String createTime,String content){
