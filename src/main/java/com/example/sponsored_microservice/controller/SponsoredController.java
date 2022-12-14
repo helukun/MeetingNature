@@ -16,6 +16,24 @@ public class SponsoredController {
     private SponsoredService sponsoredService;
 
     //good
+    @PostMapping("/v1.2/sponsored-microservice/FeedBack/addPicCon")
+    public String addPicToFBcon(String subjectId, String createTime,MultipartFile picture){
+        return sponsoredService.addPicToFBcon(subjectId,createTime,picture,"feedBackPic");
+    }
+
+    //good
+    @PostMapping("/v1.2/sponsored-microservice/Project/addPicCon")
+    public String addPicToProCon(String id,MultipartFile picture){
+        return sponsoredService.addPicToProCon(id,picture,"ProjectPic");
+    }
+
+    //good
+    @PostMapping("/v1.2/sponsored-microservice/Notice/addPicCon")
+    public String addPicToNotCon(String subjectId,String createTime,MultipartFile picture){
+        return sponsoredService.addPicToNotCon(subjectId,createTime,picture,"NoticePic");
+    }
+
+    //good
     @GetMapping("/v1.2/sponsored-microservice/projects/Org")
     public Object findProByOrg(String organization){
         return sponsoredService.findProByOrg(organization);
@@ -57,12 +75,6 @@ public class SponsoredController {
         sponsoredService.savePlusSubmitFeedBack(subjectId,createTime,content,status);
     }
 
-    //暂时使用中间层
-    @PostMapping("/v1.2/sponsored-microservice/FeedBack/addPic")
-    public String addPicToFB(String subjectId, String createTime, MultipartFile picture, HttpServletRequest request) throws IOException {
-        return sponsoredService.addPicToFB(subjectId,createTime,picture,request);
-    }
-
     //good
     @PostMapping("/v1.2/sponsored-microservice/Notice")
     public void addNotice(String subjectId){
@@ -75,7 +87,6 @@ public class SponsoredController {
         sponsoredService.savePlusSubmitNotice(subjectId,createTime,content,status);
     }
 
-    //公告的添加图片暂时由中间层实现
 
     //good
     @GetMapping("/v1.2/sponsored-microservice/Notice/AllByOrg")
@@ -100,6 +111,4 @@ public class SponsoredController {
     public void addProject(String projectName,String organization,String describe,String status, String monthFee){
         sponsoredService.addProject(projectName,organization,describe,status,monthFee);
     }
-
-    //项目的图片增加暂时使用中间层接口
 }

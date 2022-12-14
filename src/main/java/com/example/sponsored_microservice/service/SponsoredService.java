@@ -9,6 +9,7 @@ import org.apache.hc.client5.http.entity.mime.FileBody;
 import org.apache.tomcat.util.json.JSONParser;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Base64Encoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,9 +25,11 @@ import java.util.Map;
 
 @Service
 public class SponsoredService {
-    private String ProjectMicroserviceIp="http://121.5.128.97:9006";
-    private String FollowMicroserviceIp="http://121.5.128.97:9008";
-    private String ProcessManagementMicroserviceIp="http://121.5.128.97:9005";
+    @Autowired
+    OSSService ossService;
+    private String ProjectMicroserviceIp="http://localhost:9006";
+    private String FollowMicroserviceIp="http://localhost:9008";
+    private String ProcessManagementMicroserviceIp="http://localhost:9005";
 
     public Object findProByOrg(String organization){
         String resp=HttpRequest.get(ProjectMicroserviceIp+"/v1.1/project-microservice/projects/organization?organization="+
@@ -80,7 +83,7 @@ public class SponsoredService {
     public void addFeedBack(String subjectId){
         String result =HttpRequest.post(ProcessManagementMicroserviceIp
                 +"/v1.1/processmanagement-microservice/feedback?subjectId="
-        +subjectId).body();
+                +subjectId).body();
     }
 
     public void savePlusSubmitFeedBack(String subjectId,String createTime,String content,String status){
@@ -96,58 +99,33 @@ public class SponsoredService {
         ).body();
     }
 
-    /*public File MultipartFileToFile(MultipartFile multiFile) {
-        // 获取文件名
-        String fileName = multiFile.getOriginalFilename();
-        if (fileName == null){
-            return null;
-        }
-        // 获取文件后缀
-        String prefix = fileName.substring(fileName.lastIndexOf("."));
-        // 若须要防止生成的临时文件重复,能够在文件名后添加随机码
-        try {
-            File file = File.createTempFile(fileName, prefix);
-            multiFile.transferTo(file);
-            return file;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }*/
-
-    /*public String getStr(File jsonFile){
-        String jsonStr;
-        try {
-            FileReader fileReader = new FileReader(jsonFile);
-            Reader reader = new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8);
-            int ch;
-            StringBuilder sb = new StringBuilder();
-            while ((ch = reader.read()) != -1) {
-                sb.append((char) ch);
-            }
-            fileReader.close();
-            reader.close();
-            jsonStr = sb.toString();
-            return jsonStr;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }*/
-
-
-    //暂时使用中间层
-    public String addPicToFB(String subjectId, String createTime,MultipartFile picture, HttpServletRequest request) throws IOException{
-        //File file=this.MultipartFileToFile(picture);
-        //String picStr=this.getStr(file);
-        Map data = new HashMap();
-        data.put("subjectId", subjectId);
-        data.put("createTime",createTime);
-        data.put("picture", picture);
-        String result =HttpRequest.post(ProcessManagementMicroserviceIp
-                +"/v1.1/processmanagement-microservice/feedback/pictures").form(data).body();
-        return result;
+    public String addPicToFBcon(String subjectId, String createTime,MultipartFile picture,String storagePath){
+        String res=ossService.uploadFile(picture,storagePath);
+        String tmp=HttpRequest.post(ProcessManagementMicroserviceIp+"/v1.1/processmanagement-microservice/feedback/picPathOnly"
+        +"?subjectId="+subjectId
+        +"&createTime="+createTime
+        +"&newPath="+res).body();
+        return tmp;
     }
+
+    public String addPicToProCon(String id,MultipartFile picture,String storagePath){
+        String res=ossService.uploadFile(picture,storagePath);
+        String tmp=HttpRequest.post(ProjectMicroserviceIp+"/v1.1/project-microservice/projects/picPathOnly"
+                +"?id="+id
+                +"&newPath="+res).body();
+        return tmp;
+    }
+
+    public String addPicToNotCon(String subjectId,String createTime,MultipartFile picture,String storagePath){
+        String res=ossService.uploadFile(picture,storagePath);
+        String tmp=HttpRequest.post(FollowMicroserviceIp+"/v1.1/follow-microservice/notice/picPathOnly"
+                +"?subjectId="+subjectId
+                +"&createTime="+createTime
+                +"&newPath="+res).body();
+        return tmp;
+    }
+
+
 
     public void addNotice(String subjectId){
         String result =HttpRequest.post(FollowMicroserviceIp
