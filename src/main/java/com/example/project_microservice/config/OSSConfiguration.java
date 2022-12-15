@@ -26,21 +26,21 @@ public class OSSConfiguration {
 
     @Value("${aliyun.endpoint}")
     public void setEndpoint(String endpoint) {
-        OSSConfiguration.endpoint = endpoint;
+        OSSConfiguration.endpoint = "https://oss-cn-shanghai.aliyuncs.com";
     }
 
     @Value("${aliyun.accessKeyId}")
     public void setAccessKeyId(String accessKeyId) {
-        OSSConfiguration.accessKeyId = accessKeyId;
+        OSSConfiguration.accessKeyId = "LTAI5t8A5fZEVnXHDvmagwZt";
     }
 
     @Value("${aliyun.accessKeySecret}")
     public void setAccessKeySecret(String accessKeySecret) {
-        OSSConfiguration.accessKeySecret = accessKeySecret;
+        OSSConfiguration.accessKeySecret = "b23SvypcKCkVgUoQXAfI5A9kgVH98I";
     }
 
     public String getBucketName() {
-        return bucketName;
+        return "meeting-nature";
     }
 
     @Bean
