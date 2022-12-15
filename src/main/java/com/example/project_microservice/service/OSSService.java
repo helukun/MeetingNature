@@ -34,7 +34,7 @@ public class OSSService {
             objectMetadata.setContentDisposition("inline;filename=" + fileName);
             fileName = storagePath + "/" + fileName + fileType;
             // 上传文件
-            ossClient.putObject(ossConfiguration.getBucketName(), fileName, inputStream, objectMetadata);
+            ossClient.putObject("meeting-nature", fileName, inputStream, objectMetadata);
         } catch (IOException e) {
         }
         return fileName;
