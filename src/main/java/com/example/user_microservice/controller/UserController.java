@@ -15,6 +15,7 @@ import java.util.Optional;
  * @version : 1.
  */
 
+@CrossOrigin
 @RestController
 public class UserController {
     @Autowired
