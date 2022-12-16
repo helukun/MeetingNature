@@ -25,6 +25,7 @@ import java.util.Optional;
  * @version : 1.1
  */
 
+@CrossOrigin
 @RestController
 public class FeedBackController {
     @Autowired
