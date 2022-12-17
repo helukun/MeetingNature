@@ -68,9 +68,14 @@ public class ProjectService {
     public String addProject(Project project){
         project.setId(this.setNextId());
         project.setCreateTime(String.valueOf(LocalDateTime.now()));
-        project.setStatus(project.getStatus());
         project.setFollowerList(new ArrayList<>());
         project.setPicPaths(new ArrayList<>());
+        if(project.getStatus()==null){
+            project.setStatus("created");
+        }
+        else{
+            project.setStatus(project.getStatus());
+        }
         if(project.getProjectName()==null){
             project.setProjectName("");
         }
