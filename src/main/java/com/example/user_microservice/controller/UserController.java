@@ -4,6 +4,7 @@ import com.example.user_microservice.service.UserService;
 import com.example.user_microservice.model.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,5 +56,11 @@ public class UserController {
     @GetMapping("/v1.1/user-microservice/users")
     public List findAllUser(){
         return userService.findAllUser();
+    }
+
+    //good
+    @PostMapping("/v1.1/user-microservice/picturePath")
+    public String addPicPathOnly(String Id, String strogepath){
+        return userService.addPicPathOnly(Id,strogepath);
     }
 }
