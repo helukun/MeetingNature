@@ -71,8 +71,8 @@ public class FeedBackController {
 
     //good
     @PostMapping("/v2.0/processmanagement-microservice/feedback")
-    public void addFeedBack(String subjectId) throws IOException{
-        feedBackService.addFeedBack(subjectId);
+    public String addFeedBack(String subjectId) throws IOException{
+        return feedBackService.addFeedBack(subjectId);
     }
 
     //good

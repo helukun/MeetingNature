@@ -179,7 +179,7 @@ public class FeedBackService {
     }
 
     //创建新的feedback
-    public void addFeedBack(String subjectId) throws IOException {
+    public String addFeedBack(String subjectId) throws IOException {
         int exist=this.isExist(subjectId,String.valueOf(LocalDateTime.now()));
         FeedBack feedBack=new FeedBack();
         feedBack.setId(this.setNextId())
@@ -188,6 +188,7 @@ public class FeedBackService {
                 .setStatus("incomplete")
                 .setPathList(new ArrayList<>());
         feedBackDao.save(feedBack);
+        return feedBack.getCreateTime();
     }
 
     //删除feedback时自动删除所有文件
