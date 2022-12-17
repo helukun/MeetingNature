@@ -6,16 +6,13 @@ import com.github.kevinsawicki.http.HttpRequest;
 import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class SponsorService {
     private String ProjectMicroserviceIp="http://121.5.128.97:9006";
     private String FollowMicroserviceIp="http://121.5.128.97:9008";
-    private String ProcessManagementMicroserviceIp="http://121.5.128.97:9005";
+    private String ProcessManagementMicroserviceIp="http://localhost:9005";
     public Object disRPInfo(String size) {
         String resp =HttpRequest.get(ProjectMicroserviceIp+"/v1.1/project-microservice/projects/random?size="+size).body();
         return JSON.parse(resp);
@@ -37,6 +34,21 @@ public class SponsorService {
         return obj;
     }
 
+    //new
+    public Object findFeedBackInfoBySPPlusPage(String sponsorId,String index,String pageSize){
+        String res=HttpRequest.get(ProcessManagementMicroserviceIp+"/v1.6/processmanagement-microservice/feedback/sponsorIdPlusPage?sponsorId="+sponsorId
+        +"&index="+index
+        +"&pageSize="+pageSize).body();
+
+        List tmp= (List) JSON.parse(res);
+        Object size=tmp.size();
+
+        Map map=new HashMap<>();
+        map.put("List",JSON.parse(res));
+        map.put("Total",size);
+        Object o=map;
+        return o;
+    }
     //CAONIMA
     public List findFeedBackInfoByPage(String index,String pageSize,String sponsorId){
         String resp1 =HttpRequest.get(ProcessManagementMicroserviceIp+"/v1.1/processmanagement-microservice/feedback/sponsorId?sponsorId="+sponsorId).body();

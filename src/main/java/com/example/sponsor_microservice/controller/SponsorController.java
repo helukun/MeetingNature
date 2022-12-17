@@ -44,4 +44,11 @@ public class SponsorController {
     public void addFollow(String followerId,String subjectId){
         sponsorService.addFollow(followerId,subjectId);
     }
+
+    //good
+    //new
+    @GetMapping("/v1.5/sponsor-microservice/feedback/SPPlusPage")
+    public Object findFeedBackInfoBySPPlusPage(String sponsorId,String index,String pageSize){
+        return sponsorService.findFeedBackInfoBySPPlusPage(sponsorId,index,pageSize);
+    }
 }
