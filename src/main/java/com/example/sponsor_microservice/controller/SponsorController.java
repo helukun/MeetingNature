@@ -2,53 +2,72 @@ package com.example.sponsor_microservice.controller;
 
 import com.example.sponsor_microservice.service.SponsorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@CrossOrigin
 @RestController
 public class SponsorController {
     @Autowired
     private SponsorService sponsorService;
 
     //good
-    @GetMapping("/v1.0/sponsor-microservice/projects/RPInfo")
+    @GetMapping("/v1.1/sponsor-microservice/projects/RPInfo")
     public Object disRPInfo(String size){
         return sponsorService.disRPInfo(size);
     }
 
     //good
-    @GetMapping("/v1.0/sponsor-microservice/projects/page")
+    @GetMapping("/v1.1/sponsor-microservice/projects/page")
     public Object findProjectByPage(int index,int pageSize){
         return sponsorService.findProjectByPage(index,pageSize);
     }
 
     //good
-    @GetMapping("/v1.0/sponsor-microservice/projects/projectAndNotice")
+    @GetMapping("/v1.01sponsor-microservice/projects/projectAndNotice")
     public Object findProjectAndNotice(String id){
         return sponsorService.findProjectAndNotice(id);
     }
 
     //good
-    @GetMapping("/v1.0/sponsor-microservice/feedback/all")
-    public List findFeedBackInfoByPage(String index,String pageSize,String sponsorId){
-        return sponsorService.findFeedBackInfoByPage(index,pageSize,sponsorId);
+    @GetMapping("/v1.1/sponsor-microservice/feedback/all")
+    public Object findFeedBackInfoByPage(String index,String pageSize,String sponsorId){
+        return sponsorService.findFeedBackInfoBySPPlusPage(index,pageSize,sponsorId);
     }
 
     //good
-    @PostMapping("/v1.0/sponsor-microservice/follow/add")
+    @PostMapping("/v1.1/sponsor-microservice/follow/add")
     public void addFollow(String followerId,String subjectId){
         sponsorService.addFollow(followerId,subjectId);
     }
 
-    //good
-    //new
-    @GetMapping("/v1.5/sponsor-microservice/feedback/SPPlusPage")
-    public Object findFeedBackInfoBySPPlusPage(String sponsorId,String index,String pageSize){
-        return sponsorService.findFeedBackInfoBySPPlusPage(sponsorId,index,pageSize);
+    @GetMapping("/v1.1/sponsor-microservice/follow/users/id")
+    public Object GetUserById(String id){
+        return sponsorService.getUserById(id);
     }
+
+    @PostMapping("/v1.1/sponsor-microservice/order")
+    public int CreateOrder(String sponsorId, String subjectId, String amount, String SponsorshipPeriod){
+        return sponsorService.CreateOrder(sponsorId,subjectId,amount,SponsorshipPeriod);
+    }
+
+    @PutMapping("/v1.1/sponsor-microservice/order")
+    public int ChangeOrderStatue(String orderId){
+        return sponsorService.ChangeOrderStatue(orderId);
+    }
+
+    @PostMapping("/v1.1/sponsor-microservice/sponsorship")
+    public int CreateSponsorShip(String orderId, String days) {
+        return sponsorService.CreateSponsorShip(orderId,days);
+    }
+
+    @PostMapping("/v1.1/sponsor-microservice/profile")
+    public String AddProfile(String id, MultipartFile profile, String storagePath){
+        return sponsorService.addProfile(id,profile,storagePath);
+    }
+
 }
