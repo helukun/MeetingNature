@@ -191,4 +191,22 @@ public class UserService {
     public void deleteUser(String id){
         userDao.deleteById(id);
     }
+
+    public String addPicPathOnly(String Id,String newPath){
+        String message="";    //合法性
+
+        /*根据id找到对应用户*/
+        User ustmp=new User();
+        ustmp.setId(Id);
+        Example<User> userExample=Example.of(ustmp);
+        List<User> userList=userDao.findAll(userExample);
+        if(userList.isEmpty()){
+            return message+"Failed!";
+        }
+
+        userList.get(0).setProfilePath("https://meeting-nature.oss-cn-shanghai.aliyuncs.com/"+newPath);
+        userDao.save(userList.get(0));
+
+        return "https://meeting-nature.oss-cn-shanghai.aliyuncs.com/"+newPath;
+    }
 }
