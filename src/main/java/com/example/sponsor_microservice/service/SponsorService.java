@@ -73,43 +73,6 @@ public class SponsorService {
         return Integer.parseInt(result);
     }
 
-    public Object findFeedBackInfoBySPPlusPage(String sponsorId,String index,String pageSize){
-        String res=HttpRequest.get(ProcessManagementMicroserviceIp+"/v2.0/processmanagement-microservice/feedback/sponsorIdPlusPage?sponsorId="+sponsorId
-                +"&index="+index
-                +"&pageSize="+pageSize).body();
-
-        List tmp= (List) JSON.parse(res);
-        int size=tmp.size();
-        List result_list = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            Object o = tmp.get(i);
-            String objS = String.valueOf(o);
-            int pos = objS.indexOf("\"subjectId\"");
-            String subs = objS.substring(pos + 13);
-            int firstIndex = subs.indexOf('\"');
-            //找到的subjectId
-            String resId = subs.substring(0, firstIndex);
-            String proResp = HttpRequest.get(ProjectMicroserviceIp + "/v2.0/project-microservice/projects/Id?id=" + resId).body();
-            //int startPosOfProjectName=proResp.indexOf("\"projectName\"");
-            String projectNamesub1 = proResp.substring(proResp.indexOf("\"projectName\"") + 1);
-            String projectNamesub2 = projectNamesub1.substring((projectNamesub1.indexOf('\"') + 1));
-            String projectNamesub3 = projectNamesub2.substring(projectNamesub2.indexOf('\"') + 1);
-            String projectName = projectNamesub3.substring(0, projectNamesub3.indexOf('\"'));
-
-            String organizationsub1 = proResp.substring(proResp.indexOf("\"projectName\"") + 1);
-            String organizationsub2 = organizationsub1.substring((organizationsub1.indexOf('\"') + 1));
-            String organizationsub3 = organizationsub2.substring(organizationsub2.indexOf('\"') + 1);
-            String organization = organizationsub3.substring(0, organizationsub3.indexOf('\"'));
-
-            String result = objS.substring(0, objS.lastIndexOf('}')) + ',' + "\"projectName\":" + '\"' + projectName + '\"' + ',' + "\"organization\":" + '\"' + organization + '\"' + '}';
-            result_list.add(JSON.parse(result));
-        }
-        Map map=new HashMap<>();
-        map.put("List",result_list);
-        map.put("Total",""+size);
-        Object o=map;
-        return o;
-    }
 
     //根据sponsorId生成对应的赞助关系，在修改订单状态之后调用,成功生成返回1，否则返回0
     public int CreateSponsorShip(String orderId, String days) {
@@ -152,5 +115,51 @@ public class SponsorService {
                 +"?id="+id
                 +"&newPath="+res).body();
         return tmp;
+    }
+
+
+    //new
+    public Object findFeedBackInfoBySPPlusPage(String sponsorId,String index,String pageSize){
+        String res=HttpRequest.get(ProcessManagementMicroserviceIp+"/v2.0/processmanagement-microservice/feedback/sponsorIdPlusPage?sponsorId="+sponsorId
+                +"&index="+index
+                +"&pageSize="+pageSize).body();
+
+        String SizeRes=HttpRequest.get(ProcessManagementMicroserviceIp+"/v2.0/processmanagement-microservice/feedback/sponsorId?sponsorId="+sponsorId).body();
+        List tmp2= (List) JSON.parse(SizeRes);
+        int Totalsize=tmp2.size();
+
+        List tmp= (List) JSON.parse(res);
+        int size=tmp.size();
+
+        List tmpPro=new ArrayList<>();
+        for(int i=0;i<size;i++){
+            Object o=tmp.get(i);
+            String objS= String.valueOf(o);
+            int pos=objS.indexOf("\"subjectId\"");
+            String subs=objS.substring(pos+13);
+            int firstIndex=subs.indexOf('\"');
+            //找到的subjectId
+            String resId=subs.substring(0,firstIndex);
+            String proResp =HttpRequest.get(ProjectMicroserviceIp+"/v2.0/project-microservice/projects/Id?id="+resId).body();
+            //int startPosOfProjectName=proResp.indexOf("\"projectName\"");
+            String projectNamesub1=proResp.substring(proResp.indexOf("\"projectName\"")+1);
+            String projectNamesub2=projectNamesub1.substring((projectNamesub1.indexOf('\"')+1));
+            String projectNamesub3=projectNamesub2.substring(projectNamesub2.indexOf('\"')+1);
+            String projectName=projectNamesub3.substring(0,projectNamesub3.indexOf('\"'));
+
+            String organizationsub1=proResp.substring(proResp.indexOf("\"projectName\"")+1);
+            String organizationsub2=organizationsub1.substring((organizationsub1.indexOf('\"')+1));
+            String organizationsub3=organizationsub2.substring(organizationsub2.indexOf('\"')+1);
+            String organization=organizationsub3.substring(0,organizationsub3.indexOf('\"'));
+
+            String result=objS.substring(0,objS.lastIndexOf('}'))+','+"\"projectName\":"+'\"'+projectName+'\"'+','+"\"organization\":"+'\"'+organization+'\"'+'}';
+            tmpPro.add(JSON.parse(result));
+        }
+
+        Map map=new HashMap<>();
+        map.put("List",tmpPro);
+        map.put("Total",Totalsize);
+        Object o=map;
+        return o;
     }
 }

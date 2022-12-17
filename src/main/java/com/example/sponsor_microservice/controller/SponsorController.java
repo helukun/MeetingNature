@@ -67,5 +67,11 @@ public class SponsorController {
     public String AddProfile(String id, MultipartFile profile, String storagePath){
         return sponsorService.addProfile(id,profile,storagePath);
     }
+    //good
+    //new
+    @GetMapping("/v2.0/sponsor-microservice/feedback/SPPlusPage")
+    public Object findFeedBackInfoBySPPlusPage(String sponsorId,String index,String pageSize){
+        return sponsorService.findFeedBackInfoBySPPlusPage(sponsorId,index,pageSize);
+    }
 
 }
