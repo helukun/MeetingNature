@@ -23,21 +23,21 @@ public class SponsorService {
     private String UserMicroserviceIp = "http://121.5.128.97:9007";
 
     public Object disRPInfo(String size) {
-        String resp = HttpRequest.get(ProjectMicroserviceIp + "/v1.1/project-microservice/projects/random?size=" + size).body();
+        String resp = HttpRequest.get(ProjectMicroserviceIp + "/v2.0/project-microservice/projects/random?size=" + size).body();
         return JSON.parse(resp);
     }
 
     public Object findProjectByPage(int index, int pageSize) {
         String resp = HttpRequest.get(ProjectMicroserviceIp
-                + "/v1.1/project-microservice/projects/page?index="
+                + "/v2.0/project-microservice/projects/page?index="
                 + index + "&pageSize="
                 + pageSize).body();
         return JSON.parse(resp);
     }
 
     public Object findProjectAndNotice(String id) {
-        String resp1 = HttpRequest.get(ProjectMicroserviceIp + "/v1.1/project-microservice/projects/Id?id=" + id).body();
-        String resp2 = HttpRequest.get(FollowMicroserviceIp + "/v1.1/follow-microservice/notice/subjectId?subjectId=" + id).body();
+        String resp1 = HttpRequest.get(ProjectMicroserviceIp + "/v2.0/project-microservice/projects/Id?id=" + id).body();
+        String resp2 = HttpRequest.get(FollowMicroserviceIp + "/v2.0/follow-microservice/notice/subjectId?subjectId=" + id).body();
         System.out.println(resp1.substring(0, resp1.lastIndexOf('}')) + ',' + "\"notice\":" + resp2 + '}');
         Object obj = JSON.parse(resp1.substring(0, resp1.lastIndexOf('}')) + ',' + "\"notice\":" + resp2 + '}');
         return obj;
@@ -47,11 +47,11 @@ public class SponsorService {
         Map data = new HashMap();
         data.put("followerId", followerId);
         data.put("subjectId", subjectId);
-        String result = HttpRequest.post(FollowMicroserviceIp + "/v1.1/follow-microservice/follow").form(data).body();
+        String result = HttpRequest.post(FollowMicroserviceIp + "/v2.0/follow-microservice/follow").form(data).body();
     }
 
     public Object getUserById(String id) {
-        String user = HttpRequest.get(UserMicroserviceIp + "/v1.1/user-microservice/users/id?id=" + id).body();
+        String user = HttpRequest.get(UserMicroserviceIp + "/v2.0/user-microservice/users/id?id=" + id).body();
         return user;
     }
 
@@ -62,19 +62,19 @@ public class SponsorService {
         data.put("amount", amount);
         data.put("subjectId", subjectId);
         data.put("SponsorshipPeriod", SponsorshipPeriod);
-        HttpRequest.post(ProcessManagementMicroserviceIp + "/v1.1/processmanagement-microservice/orders").form(data).body();
+        HttpRequest.post(ProcessManagementMicroserviceIp + "/v2.0/processmanagement-microservice/orders").form(data).body();
         return 1;
     }
 
     //改变订单状态，将订单状态从未完成变为已完成
     //订单完成的同时会生成对应订单的赞助关系
     public int ChangeOrderStatue(String orderId) {
-        String result = HttpRequest.put(ProcessManagementMicroserviceIp + "/v1.1/processmanagement-microservice/orders?orderId=" + orderId).body();
+        String result = HttpRequest.put(ProcessManagementMicroserviceIp + "/v2.0/processmanagement-microservice/orders?orderId=" + orderId).body();
         return Integer.parseInt(result);
     }
 
     public Object findFeedBackInfoBySPPlusPage(String sponsorId,String index,String pageSize){
-        String res=HttpRequest.get(ProcessManagementMicroserviceIp+"/v1.6/processmanagement-microservice/feedback/sponsorIdPlusPage?sponsorId="+sponsorId
+        String res=HttpRequest.get(ProcessManagementMicroserviceIp+"/v2.0/processmanagement-microservice/feedback/sponsorIdPlusPage?sponsorId="+sponsorId
                 +"&index="+index
                 +"&pageSize="+pageSize).body();
 
@@ -89,7 +89,7 @@ public class SponsorService {
             int firstIndex = subs.indexOf('\"');
             //找到的subjectId
             String resId = subs.substring(0, firstIndex);
-            String proResp = HttpRequest.get(ProjectMicroserviceIp + "/v1.1/project-microservice/projects/Id?id=" + resId).body();
+            String proResp = HttpRequest.get(ProjectMicroserviceIp + "/v2.0/project-microservice/projects/Id?id=" + resId).body();
             //int startPosOfProjectName=proResp.indexOf("\"projectName\"");
             String projectNamesub1 = proResp.substring(proResp.indexOf("\"projectName\"") + 1);
             String projectNamesub2 = projectNamesub1.substring((projectNamesub1.indexOf('\"') + 1));
@@ -113,7 +113,7 @@ public class SponsorService {
 
     //根据sponsorId生成对应的赞助关系，在修改订单状态之后调用,成功生成返回1，否则返回0
     public int CreateSponsorShip(String orderId, String days) {
-        String order = HttpRequest.get(ProcessManagementMicroserviceIp + "/v1.1/processmanagement-microservice/orders/Id?Id=" + orderId).body();
+        String order = HttpRequest.get(ProcessManagementMicroserviceIp + "/v2.0/processmanagement-microservice/orders/Id?Id=" + orderId).body();
         String sponsorIdSubOne = order.substring(order.indexOf("\"sponsorId\"") + 13);
         String sponsorId = sponsorIdSubOne.substring(0, sponsorIdSubOne.indexOf('\"'));
         String subjectIdSubOne = order.substring(order.indexOf("\"subjectId\"") + 13);
@@ -142,13 +142,13 @@ public class SponsorService {
         data.put("sponsorId", sponsorId);
         data.put("subjectId", subjectId);
         data.put("cutoffTime", EndTime);
-        String result = HttpRequest.post(ProcessManagementMicroserviceIp + "/v1.1/processmanagement-microservice/sponsorship").form(data).body();
+        String result = HttpRequest.post(ProcessManagementMicroserviceIp + "/v2.0/processmanagement-microservice/sponsorship").form(data).body();
         return Integer.parseInt(result);
     }
 
     public String addProfile(String id, MultipartFile picture, String storagePath){
         String res=ossService.uploadFile(picture,storagePath);
-        String tmp=HttpRequest.post(UserMicroserviceIp+"/v1.1/user-microservice/picturePath"
+        String tmp=HttpRequest.post(UserMicroserviceIp+"/v2.0/user-microservice/picturePath"
                 +"?id="+id
                 +"&newPath="+res).body();
         return tmp;
