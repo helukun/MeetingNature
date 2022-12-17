@@ -223,7 +223,7 @@ public class SponsoredService {
                 +id).body();
     }
 
-    public void addProject(String projectName,String organization,String describe,String status, String monthFee){
+    public void addProject(String projectName,String organization,String describe, String monthFee){
         Map data = new HashMap();
         if(projectName!=null){
             data.put("projectName", projectName);
@@ -233,9 +233,6 @@ public class SponsoredService {
         }
         if(describe!=null){
             data.put("describe", describe);
-        }
-        if(status!=null){
-            data.put("status", status);
         }
         if(monthFee!=null){
             data.put("monthFee", monthFee);
