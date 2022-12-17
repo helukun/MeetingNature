@@ -18,7 +18,7 @@ import java.util.Optional;
  * @author ：ZXM+LJC
  * @description：ProjectController
  * @date ：2022-12-9 15:18
- * @version : 1.1
+ * @version : 2.0
  */
 
 @CrossOrigin
@@ -32,96 +32,96 @@ public class ProjectController {
     private OSSService ossService;
 
     //good
-    @PostMapping("/v1.1/project-microservice/projects")
+    @PostMapping("/v2.0/project-microservice/projects")
     public String addProject(Project newProject){
         return projectService.addProject(newProject);
     }
 
     //good
-    @PostMapping("/v1.1/project-microservice/projects/picture")
+    @PostMapping("/v2.0/project-microservice/projects/picture")
     public String addPicture(String id, MultipartFile picture, HttpServletRequest request) throws IOException {
         return projectService.addPicture(id,picture,request);
     }
 
     //good
-    @PostMapping("/v1.1/project-microservice/projects/picture/con")
+    @PostMapping("/v2.0/project-microservice/projects/picture/con")
     public String addPicCon(String id, MultipartFile picture){
         return projectService.addPicCon(id,picture,"sss");
     }
 
 
-    @PostMapping("/v1.1/project-microservice/projects/picPathOnly")
+    @PostMapping("/v2.0/project-microservice/projects/picPathOnly")
     public String addPicPathOnly(String id,String newPath){
         return projectService.addPicPathOnly(id,newPath);
     }
 
     //good
-    @DeleteMapping("/v1.1/project-microservice/projects")
+    @DeleteMapping("/v2.0/project-microservice/projects")
     public void deleteProject(String id){
         projectService.deleteProject(id);
     }
 
     //good
-    @DeleteMapping("/v1.1/project-microservice/projects/deletePic")
+    @DeleteMapping("/v2.0/project-microservice/projects/deletePic")
     public void deletePicByProId(String id,String picPath){
         projectService.deletePicByProId(id,picPath);
     }
 
     //good
-    @PutMapping("/v1.1/project-microservice/projects")
+    @PutMapping("/v2.0/project-microservice/projects")
     public int changeProjectInfo(Project newProject){
         return projectService.changeProjectInfo(newProject);
     }
 
     //good
-    @GetMapping("/v1.1/project-microservice/projects/Id")
+    @GetMapping("/v2.0/project-microservice/projects/Id")
     public Project findProjectById(String id){
         return projectService.findProjectById(id);
     }
 
     //good
-    @GetMapping("/v1.1/project-microservice/projects")
+    @GetMapping("/v2.0/project-microservice/projects")
     public List findAllProject(){
         return projectService.findAllProject();
     }
 
     //good
-    @GetMapping("/v1.1/project-microservice/projects/page")
+    @GetMapping("/v2.0/project-microservice/projects/page")
     public Page<Project> findAllProjectByPage(int index,int pageSize){
         return projectService.findProjectByPage(index,pageSize);
     }
 
-    @GetMapping("/v1.1/project-microservice/projects/status")
+    @GetMapping("/v2.0/project-microservice/projects/status")
     public List<Project> findAllProjectByStatus(String status){
         return projectService.findProjectByStatus(status);
     }
 
 
-    @GetMapping("/v1.1/project-microservice/projects/time")
+    @GetMapping("/v2.0/project-microservice/projects/time")
     public List<Project> findAllProjectByTime(String startTime,String endTime){
         return projectService.findProjectByTime(startTime,endTime);
     }
 
     //good
-    @GetMapping("/v1.1/project-microservice/projects/organization")
+    @GetMapping("/v2.0/project-microservice/projects/organization")
     public List findAllProjectByOrg(String organization){
         return projectService.findProjectByOrg(organization);
     }
 
     //good
-    @GetMapping("/v1.1/project-microservice/proId/organization")
+    @GetMapping("/v2.0/project-microservice/proId/organization")
     public List findAllProIdByOrg(String organization){
         return projectService.findProIdByOrg(organization);
     }
 
     //good
-    @GetMapping("/v1.1/project-microservice/projects/organizationPlusPage")
+    @GetMapping("/v2.0/project-microservice/projects/organizationPlusPage")
     public Page findAllProjectByOrgPlusPage(String organization,int index,int pageSize){
         return projectService.findProjectByOrgPlusPage(organization,index,pageSize);
     }
 
     //good
-    @GetMapping("/v1.1/project-microservice/projects/random")
+    @GetMapping("/v2.0/project-microservice/projects/random")
     public List disRPInfo(String size){
         return projectService.displayRPInfo(size);
     }
