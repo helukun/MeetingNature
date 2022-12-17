@@ -132,7 +132,7 @@ public class NoticeService {
         return "https://meeting-nature.oss-cn-shanghai.aliyuncs.com/"+newPath;
     }
 
-    public void addNotice(String subjectId) throws IOException {
+    public String addNotice(String subjectId) throws IOException {
         int exist=this.isExist(subjectId,String.valueOf(LocalDateTime.now()));
         Notice notice=new Notice();
         notice.setId(this.setNextId())
@@ -149,6 +149,7 @@ public class NoticeService {
             notice.setTitle("");
         }*/
         noticeDao.save(notice);
+        return notice.getCreateTime();
     }
 
     public void deleteNoticeByPK(String subjectId,String time){

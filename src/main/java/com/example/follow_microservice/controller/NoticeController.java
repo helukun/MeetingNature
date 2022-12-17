@@ -46,8 +46,8 @@ public class NoticeController {
     }
 
     @PostMapping("/v2.0/follow-microservice/notice")
-    public void addNotice(String subjectId) throws IOException{
-        noticeService.addNotice(subjectId);
+    public String addNotice(String subjectId) throws IOException{
+        return noticeService.addNotice(subjectId);
     }
 
     @DeleteMapping ("/v2.0/follow-microservice/notice")
