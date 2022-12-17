@@ -33,8 +33,8 @@ public class ProjectController {
 
     //good
     @PostMapping("/v1.1/project-microservice/projects")
-    public void addProject(Project newProject){
-        projectService.addProject(newProject);
+    public String addProject(Project newProject){
+        return projectService.addProject(newProject);
     }
 
     //good

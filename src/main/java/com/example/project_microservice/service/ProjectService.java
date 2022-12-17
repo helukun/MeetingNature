@@ -65,7 +65,7 @@ public class ProjectService {
     }
 
 
-    public void addProject(Project project){
+    public String addProject(Project project){
         project.setId(this.setNextId());
         project.setCreateTime(String.valueOf(LocalDateTime.now()));
         project.setStatus(project.getStatus());
@@ -87,9 +87,11 @@ public class ProjectService {
         if(exist!=1){
             projectDao.save(project);
             System.out.println("添加成功！");
+            return project.getId();
         }
         else{
             System.out.println("该项目已存在，无法再次添加！");
+            return "false";
         }
     }
 
