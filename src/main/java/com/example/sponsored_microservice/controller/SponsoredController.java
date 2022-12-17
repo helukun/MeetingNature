@@ -17,98 +17,98 @@ public class SponsoredController {
     private SponsoredService sponsoredService;
 
     //good
-    @PostMapping("/v1.2/sponsored-microservice/FeedBack/addPicCon")
+    @PostMapping("/v2.0/sponsored-microservice/FeedBack/addPicCon")
     public String addPicToFBcon(String subjectId, String createTime,MultipartFile picture){
         return sponsoredService.addPicToFBcon(subjectId,createTime,picture,"feedBackPic");
     }
 
     //good
-    @PostMapping("/v1.2/sponsored-microservice/Project/addPicCon")
+    @PostMapping("/v2.0/sponsored-microservice/Project/addPicCon")
     public String addPicToProCon(String id,MultipartFile picture){
         return sponsoredService.addPicToProCon(id,picture,"ProjectPic");
     }
 
     //good
-    @PostMapping("/v1.2/sponsored-microservice/Notice/addPicCon")
+    @PostMapping("/v2.0/sponsored-microservice/Notice/addPicCon")
     public String addPicToNotCon(String subjectId,String createTime,MultipartFile picture){
         return sponsoredService.addPicToNotCon(subjectId,createTime,picture,"NoticePic");
     }
 
     //good
-    @GetMapping("/v1.2/sponsored-microservice/projects/Org")
+    @GetMapping("/v2.0/sponsored-microservice/projects/Org")
     public Object findProByOrg(String organization){
         return sponsoredService.findProByOrg(organization);
     }
 
     //good
-    @GetMapping("/v1.2/sponsored-microservice/projects/OrgPlusPage")
+    @GetMapping("/v2.0/sponsored-microservice/projects/OrgPlusPage")
     public Object findProByOrgPlusPage(String organization,int index,int pageSize){
         return sponsoredService.findProByOrgPlusPage(organization,index,pageSize);
     }
 
     //good
-    @GetMapping("/v1.2/sponsored-microservice/Notice/SB")
+    @GetMapping("/v2.0/sponsored-microservice/Notice/SB")
     public Object findNotBySB(String subjectId) throws IOException{
         return sponsoredService.findNotBySB(subjectId);
     }
 
     //good
-    @GetMapping("/v1.2/sponsored-microservice/Notice/SBPlusPage")
+    @GetMapping("/v2.0/sponsored-microservice/Notice/SBPlusPage")
     public Object findNotBySBPlusPage(String subjectId,int index,int pageSize) throws IOException{
         return sponsoredService.findNotBySBPlusPage(subjectId,index,pageSize);
     }
 
     //good
-    @PutMapping("/v1.2/sponsored-microservice/Project")
+    @PutMapping("/v2.0/sponsored-microservice/Project")
     public void changeProject(String id,String projectName,String organization,String describe,String status, String monthFee){
         sponsoredService.changeProject(id,projectName,organization,describe,status,monthFee);
     }
 
     //good
-    @PostMapping("/v1.2/sponsored-microservice/FeedBack")
+    @PostMapping("/v2.0/sponsored-microservice/FeedBack")
     public void addFeedBack(String subjectId){
         sponsoredService.addFeedBack(subjectId);
     }
 
     //good
-    @PostMapping("/v1.2/sponsored-microservice/FeedBack/savePlusSubmit")
+    @PostMapping("/v2.0/sponsored-microservice/FeedBack/savePlusSubmit")
     public void savePlusSubmitFeedBack(String subjectId,String createTime,String content,String status){
         sponsoredService.savePlusSubmitFeedBack(subjectId,createTime,content,status);
     }
 
     //good
-    @PostMapping("/v1.2/sponsored-microservice/Notice")
+    @PostMapping("/v2.0/sponsored-microservice/Notice")
     public void addNotice(String subjectId){
         sponsoredService.addNotice(subjectId);
     }
 
     //good
-    @PostMapping("/v1.2/sponsored-microservice/Notice/savePlusSubmit")
+    @PostMapping("/v2.0/sponsored-microservice/Notice/savePlusSubmit")
     public void savePlusSubmitNotice(String subjectId,String createTime,String content,String status){
         sponsoredService.savePlusSubmitNotice(subjectId,createTime,content,status);
     }
 
 
     //good
-    @GetMapping("/v1.2/sponsored-microservice/Notice/AllByOrg")
+    @GetMapping("/v2.0/sponsored-microservice/Notice/AllByOrg")
     public Object findAllNoticeByOrg(String organization,String index,String pageSize){
         return sponsoredService.findAllNoticeByOrg(organization,index,pageSize);
     }
 
     //good
-    @GetMapping("/v1.2/sponsored-microservice/FeedBack/AllByOrg")
+    @GetMapping("/v2.0/sponsored-microservice/FeedBack/AllByOrg")
     public Object findAllFeedBackByOrg(String organization,String index,String pageSize){
         return  sponsoredService.findAllFeedBackByOrg(organization,index,pageSize);
     }
 
     //good
-    @DeleteMapping("/v1.2/sponsored-microservice/FeedBack/Id")
+    @DeleteMapping("/v2.0/sponsored-microservice/FeedBack/Id")
     public void deleteFBById(String id){
         sponsoredService.deleteFBById(id);
     }
 
     //good
-    @PostMapping("/v1.2/sponsored-microservice/Project")
+    @PostMapping("/v2.0/sponsored-microservice/Project")
     public String addProject(String projectName,String organization,String describe,String status, String monthFee){
         return sponsoredService.addProject(projectName,organization,describe,status,monthFee);
     }

@@ -32,13 +32,13 @@ public class SponsoredService {
     private String ProcessManagementMicroserviceIp="http://121.5.128.97:9005";
 
     public Object findProByOrg(String organization){
-        String resp=HttpRequest.get(ProjectMicroserviceIp+"/v1.1/project-microservice/projects/organization?organization="+
+        String resp=HttpRequest.get(ProjectMicroserviceIp+"/v2.0/project-microservice/projects/organization?organization="+
                 organization).body();
         return JSON.parse(resp);
     }
 
     public Object findProByOrgPlusPage(String organization,int index,int pageSize){
-        String resp=HttpRequest.get(ProjectMicroserviceIp+"/v1.1/project-microservice/projects/organizationPlusPage?organization="+
+        String resp=HttpRequest.get(ProjectMicroserviceIp+"/v2.0/project-microservice/projects/organizationPlusPage?organization="+
                 organization+"&index="
                 +index+"&pageSize="
                 +pageSize).body();
@@ -46,13 +46,13 @@ public class SponsoredService {
     }
 
     public Object findNotBySB(String subjectId) throws IOException {
-        String resp=HttpRequest.get(FollowMicroserviceIp+"/v1.1/follow-microservice/notice/subjectId?subjectId="+
+        String resp=HttpRequest.get(FollowMicroserviceIp+"/v2.0/follow-microservice/notice/subjectId?subjectId="+
                 subjectId).body();
         return JSON.parse(resp);
     }
 
     public Object findNotBySBPlusPage(String subjectId,int index,int pageSize) throws IOException {
-        String resp=HttpRequest.get(FollowMicroserviceIp+"/v1.1/follow-microservice/notice/SBPlusPage?subjectId="+
+        String resp=HttpRequest.get(FollowMicroserviceIp+"/v2.0/follow-microservice/notice/SBPlusPage?subjectId="+
                 subjectId+"&index="
                 +index+"&pageSize="
                 +pageSize).body();
@@ -77,23 +77,23 @@ public class SponsoredService {
         if(monthFee!=null){
             data.put("monthFee", monthFee);
         }
-        String result =HttpRequest.put(ProjectMicroserviceIp+"/v1.1/project-microservice/projects").form(data).body();
+        String result =HttpRequest.put(ProjectMicroserviceIp+"/v2.0/project-microservice/projects").form(data).body();
     }
 
     public void addFeedBack(String subjectId){
         String result =HttpRequest.post(ProcessManagementMicroserviceIp
-                +"/v1.1/processmanagement-microservice/feedback?subjectId="
+                +"/v2.0/processmanagement-microservice/feedback?subjectId="
                 +subjectId).body();
     }
 
     public void savePlusSubmitFeedBack(String subjectId,String createTime,String content,String status){
         String result1 =HttpRequest.post(ProcessManagementMicroserviceIp
-                +"/v1.1/processmanagement-microservice/feedback/content?subjectId="+subjectId
+                +"/v2.0/processmanagement-microservice/feedback/content?subjectId="+subjectId
                 +"&createTime="+createTime
                 +"&content="+content
         ).body();
         String result2 =HttpRequest.put(ProcessManagementMicroserviceIp
-                +"/v1.1/processmanagement-microservice/feedback/status?subjectId="+subjectId
+                +"/v2.0/processmanagement-microservice/feedback/status?subjectId="+subjectId
                 +"&createTime="+createTime
                 +"&status="+status
         ).body();
@@ -101,7 +101,7 @@ public class SponsoredService {
 
     public String addPicToFBcon(String subjectId, String createTime,MultipartFile picture,String storagePath){
         String res=ossService.uploadFile(picture,storagePath);
-        String tmp=HttpRequest.post(ProcessManagementMicroserviceIp+"/v1.1/processmanagement-microservice/feedback/picPathOnly"
+        String tmp=HttpRequest.post(ProcessManagementMicroserviceIp+"/v2.0/processmanagement-microservice/feedback/picPathOnly"
         +"?subjectId="+subjectId
         +"&createTime="+createTime
         +"&newPath="+res).body();
@@ -110,7 +110,7 @@ public class SponsoredService {
 
     public String addPicToProCon(String id,MultipartFile picture,String storagePath){
         String res=ossService.uploadFile(picture,storagePath);
-        String tmp=HttpRequest.post(ProjectMicroserviceIp+"/v1.1/project-microservice/projects/picPathOnly"
+        String tmp=HttpRequest.post(ProjectMicroserviceIp+"/v2.0/project-microservice/projects/picPathOnly"
                 +"?id="+id
                 +"&newPath="+res).body();
         return tmp;
@@ -118,7 +118,7 @@ public class SponsoredService {
 
     public String addPicToNotCon(String subjectId,String createTime,MultipartFile picture,String storagePath){
         String res=ossService.uploadFile(picture,storagePath);
-        String tmp=HttpRequest.post(FollowMicroserviceIp+"/v1.1/follow-microservice/notice/picPathOnly"
+        String tmp=HttpRequest.post(FollowMicroserviceIp+"/v2.0/follow-microservice/notice/picPathOnly"
                 +"?subjectId="+subjectId
                 +"&createTime="+createTime
                 +"&newPath="+res).body();
@@ -129,17 +129,17 @@ public class SponsoredService {
 
     public void addNotice(String subjectId){
         String result =HttpRequest.post(FollowMicroserviceIp
-                +"/v1.1/follow-microservice/notice?subjectId="+subjectId).body();
+                +"/v2.0/follow-microservice/notice?subjectId="+subjectId).body();
     }
 
     public void savePlusSubmitNotice(String subjectId,String createTime,String content,String status){
         String result1 =HttpRequest.post(FollowMicroserviceIp
-                +"/v1.1/follow-microservice/notice/content?subjectId="+subjectId
+                +"/v2.0/follow-microservice/notice/content?subjectId="+subjectId
                 +"&createTime="+createTime
                 +"&content="+content
         ).body();
         String result2 =HttpRequest.put(FollowMicroserviceIp
-                +"/v1.1/follow-microservice/notice/status?subjectId="+subjectId
+                +"/v2.0/follow-microservice/notice/status?subjectId="+subjectId
                 +"&createTime="+createTime
                 +"&status="+status
         ).body();
@@ -147,12 +147,12 @@ public class SponsoredService {
 
     public Object findAllNoticeByOrg(String organization,String index,String pageSize){
         List res=new ArrayList<>();
-        String resp1=HttpRequest.get(ProjectMicroserviceIp+"/v1.1/project-microservice/proId/organization?organization="+
+        String resp1=HttpRequest.get(ProjectMicroserviceIp+"/v2.0/project-microservice/proId/organization?organization="+
                 organization).body();
         List tmp1=(List)JSON.parse(resp1);
         for(Object o:tmp1){
             String s= (String) o;
-            String resp2=HttpRequest.get(FollowMicroserviceIp+"/v1.1/follow-microservice/notice/subjectId?subjectId="+
+            String resp2=HttpRequest.get(FollowMicroserviceIp+"/v2.0/follow-microservice/notice/subjectId?subjectId="+
                     s).body();
             List tmp2 = (List)JSON.parse(resp2);
             for(Object os:tmp2){
@@ -183,13 +183,13 @@ public class SponsoredService {
 
     public Object findAllFeedBackByOrg(String organization,String index,String pageSize){
         List res=new ArrayList<>();
-        String resp1=HttpRequest.get(ProjectMicroserviceIp+"/v1.1/project-microservice/proId/organization?organization="+
+        String resp1=HttpRequest.get(ProjectMicroserviceIp+"/v2.0/project-microservice/proId/organization?organization="+
                 organization).body();
         List tmp1=(List)JSON.parse(resp1);
         for(Object o:tmp1){
             String s= (String) o;
             String resp2=HttpRequest.get(ProcessManagementMicroserviceIp
-                    +"/v1.1/processmanagement-microservice/feedback/subjectId?subjectId="
+                    +"/v2.0/processmanagement-microservice/feedback/subjectId?subjectId="
                     +s).body();
             List tmp2 = (List)JSON.parse(resp2);
             for(Object os:tmp2){
@@ -219,7 +219,7 @@ public class SponsoredService {
 
     public void deleteFBById(String id){
         String resp1=HttpRequest.delete(ProcessManagementMicroserviceIp
-                +"/v1.1/processmanagement-microservice/feedback/Id?id="
+                +"/v2.0/processmanagement-microservice/feedback/Id?id="
                 +id).body();
     }
 
@@ -240,7 +240,7 @@ public class SponsoredService {
         if(monthFee!=null){
             data.put("monthFee", monthFee);
         }
-        String result =HttpRequest.post(ProjectMicroserviceIp+"/v1.1/project-microservice/projects").form(data).body();
+        String result =HttpRequest.post(ProjectMicroserviceIp+"/v2.0/project-microservice/projects").form(data).body();
         return result;
     }
 }
