@@ -80,10 +80,11 @@ public class SponsoredService {
         String result =HttpRequest.put(ProjectMicroserviceIp+"/v2.0/project-microservice/projects").form(data).body();
     }
 
-    public void addFeedBack(String subjectId){
+    public String addFeedBack(String subjectId){
         String result =HttpRequest.post(ProcessManagementMicroserviceIp
                 +"/v2.0/processmanagement-microservice/feedback?subjectId="
                 +subjectId).body();
+        return result;
     }
 
     public void savePlusSubmitFeedBack(String subjectId,String createTime,String content,String status){
@@ -127,9 +128,10 @@ public class SponsoredService {
 
 
 
-    public void addNotice(String subjectId){
+    public String addNotice(String subjectId){
         String result =HttpRequest.post(FollowMicroserviceIp
                 +"/v2.0/follow-microservice/notice?subjectId="+subjectId).body();
+        return result;
     }
 
     public void savePlusSubmitNotice(String subjectId,String createTime,String content,String status){

@@ -66,8 +66,8 @@ public class SponsoredController {
 
     //good
     @PostMapping("/v2.0/sponsored-microservice/FeedBack")
-    public void addFeedBack(String subjectId){
-        sponsoredService.addFeedBack(subjectId);
+    public String addFeedBack(String subjectId){
+        return sponsoredService.addFeedBack(subjectId);
     }
 
     //good
@@ -78,8 +78,8 @@ public class SponsoredController {
 
     //good
     @PostMapping("/v2.0/sponsored-microservice/Notice")
-    public void addNotice(String subjectId){
-        sponsoredService.addNotice(subjectId);
+    public String addNotice(String subjectId){
+        return sponsoredService.addNotice(subjectId);
     }
 
     //good
