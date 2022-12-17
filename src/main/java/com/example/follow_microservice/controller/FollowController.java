@@ -12,8 +12,8 @@ import java.util.Optional;
 /**
  * @author ：ZXM+LJC
  * @description：FollowController
- * @date ：2022-12-10 13:50
- * @version : 1.1
+ * @date ：2022-12-17 17:57
+ * @version : 2.0
  */
 
 @CrossOrigin
@@ -23,34 +23,34 @@ public class FollowController {
     private FollowService followService;
 
     //good
-    @PostMapping("/v1.1/follow-microservice/follow")
+    @PostMapping("/v2.0/follow-microservice/follow")
     public int addFollow(Follow newFollow){return followService.addFollow(newFollow);}
 
     //good
-    @DeleteMapping("/v1.1/follow-microservice/follow")
+    @DeleteMapping("/v2.0/follow-microservice/follow")
     public void deleteFollow(Follow follow){
         followService.deleteByPK(follow.getFollowerId(),follow.getSubjectId());
     }
 
-    @PutMapping("/v1.1/follow-microservice/follow")
+    @PutMapping("/v2.0/follow-microservice/follow")
     public int changeFollow(Follow newfollow){
         return followService.changeFollow(newfollow);
     }
 
     //good
-    @GetMapping("/v1.1/follow-microservice/follow")
+    @GetMapping("/v2.0/follow-microservice/follow")
     public Follow findFollowByPK(String followerId,String subjectId){
         return followService.findByPKNo(followerId,subjectId);
     }
 
     //good
-    @GetMapping("/v1.1/follow-microservice/follow/followerId")
+    @GetMapping("/v2.0/follow-microservice/follow/followerId")
     public List<Follow> findAllFollowByFOid(String followerId){
         return followService.findAllFollowByFOid(followerId);
     }
 
     //good
-    @GetMapping("/v1.1/follow-microservice/follow/subjectId")
+    @GetMapping("/v2.0/follow-microservice/follow/subjectId")
     public List<Follow> findAllFollowBySBid(String subjectId){
         return followService.findAllFollowBySBid(subjectId);
     }
