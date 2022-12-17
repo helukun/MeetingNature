@@ -24,10 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author ：ZXM+LJC
@@ -257,6 +254,89 @@ public class FeedBackService {
             }
         }
         return finalList;
+    }
+
+
+    //new
+    public List<FeedBack> findFeedBackInfoBySPPlusPage(String sponsorId,String index,String pageSize){
+        List<Sponsorship> sponsorshipList=sponsorshipService.findAllSponsorshipBySPid(sponsorId);
+        List<String> stringList = new ArrayList<>();
+        for(Sponsorship s:sponsorshipList){
+            stringList.add(s.getSubjectId());
+        }
+        List<FeedBack> finalList=new ArrayList<>();
+        for(String sid:stringList){
+            List<FeedBack> tmp=this.findFBBySB(sid);
+            for(FeedBack f:tmp){
+                finalList.add(f);
+            }
+        }
+        List Final=new ArrayList<>();
+        int realSize=finalList.size();
+        int realIndex= Integer.parseInt(index);
+        int realPageSize= Integer.parseInt(pageSize);
+        int rest=realSize%realPageSize;
+        int numOfPages=0;
+        if(rest==0){
+            numOfPages=realSize/realPageSize;
+        }
+        else{
+            numOfPages=realSize/realPageSize+1;
+        }
+        if(realIndex>numOfPages||realIndex<=0){
+            return Final;
+        }
+        for(int i=(realIndex-1)*realPageSize;i<realSize&&i<realIndex*realPageSize;i++){
+            Final.add(finalList.get(i));
+        }
+        /*int contentSize=Final.size();
+
+        Map map1=new HashMap<>();
+        map1.put("Total",realSize);
+
+
+        Map map2=new HashMap<>();
+        boolean empty=false;
+        if(Final.size()==0){
+            empty=true;
+        }
+        map2.put("empty",empty);
+        //Final.add("empty:"+empty);
+
+        Map map3=new HashMap<>();
+        boolean full=false;
+        if(contentSize==realPageSize){
+            full=true;
+        }
+        map3.put("full:",full);
+        //Final.add("full:"+full);
+
+        Map map4=new HashMap<>();
+        Map map5=new HashMap<>();
+        boolean first=false;
+        boolean last=false;
+        if(realIndex==1){
+            first=true;
+        }
+        if(realIndex==numOfPages){
+            last=true;
+        }
+        map4.put("first:",first);
+        map5.put("last:",last);
+        //Final.add("first:"+first);
+        //Final.add("last:"+last);
+
+        Map map6=new HashMap<>();
+        map6.put("CurrentPageSize",contentSize);
+        //Final.add("Current PageSize:"+contentSize);
+
+        Final.add(map1);
+        Final.add(map2);
+        Final.add(map3);
+        Final.add(map4);
+        Final.add(map5);
+        Final.add(map6);*/
+        return Final;
     }
 
     public List findAllFeedBack(){

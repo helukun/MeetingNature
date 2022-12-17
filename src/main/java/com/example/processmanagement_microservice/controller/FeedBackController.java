@@ -104,4 +104,11 @@ public class FeedBackController {
     public List findAllFB() throws IOException{
         return feedBackService.findAllFeedBack();
     }
+
+    //new
+    //good
+    @GetMapping ("/v1.6/processmanagement-microservice/feedback/sponsorIdPlusPage")
+    public List findFeedBackInfoBySPPlusPage(String sponsorId,String index,String pageSize){
+        return feedBackService.findFeedBackInfoBySPPlusPage(sponsorId,index,pageSize);
+    }
 }
