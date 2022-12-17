@@ -223,7 +223,7 @@ public class SponsoredService {
                 +id).body();
     }
 
-    public void addProject(String projectName,String organization,String describe, String monthFee){
+    public String addProject(String projectName,String organization,String describe,String status, String monthFee){
         Map data = new HashMap();
         if(projectName!=null){
             data.put("projectName", projectName);
@@ -234,9 +234,13 @@ public class SponsoredService {
         if(describe!=null){
             data.put("describe", describe);
         }
+        if(status!=null){
+            data.put("status", status);
+        }
         if(monthFee!=null){
             data.put("monthFee", monthFee);
         }
         String result =HttpRequest.post(ProjectMicroserviceIp+"/v1.1/project-microservice/projects").form(data).body();
+        return result;
     }
 }
