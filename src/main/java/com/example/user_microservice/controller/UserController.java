@@ -12,8 +12,8 @@ import java.util.Optional;
 /**
  * @author ：ZXM+LJC
  * @description：UserController
- * @date ：2022-12-10 14:06
- * @version : 1.
+ * @date ：2022-12-17 17:50
+ * @version : 2.0
  */
 
 @CrossOrigin
@@ -23,43 +23,43 @@ public class UserController {
     private UserService userService;
 
     //good
-    @PostMapping("/v1.1/user-microservice/users")
+    @PostMapping("/v2.0/user-microservice/users")
     public void addUser(User user){
         userService.addUser(user);
     }
 
     //good
-    @PutMapping("/v1.1/user-microservice/users")
+    @PutMapping("/v2.0/user-microservice/users")
     public int changeUserInfo(User newUser){
         return userService.changeUserInfo(newUser);
     }
 
     //good
-    @DeleteMapping ("/v1.1/user-microservice/users")
+    @DeleteMapping ("/v2.0/user-microservice/users")
     public void deleteUser(String id){
         userService.deleteUser(id);
     }
 
     //good
-    @GetMapping("/v1.1/user-microservice/users/email")
+    @GetMapping("/v2.0/user-microservice/users/email")
     public Optional<User> findUserByEmail(String email){
         return userService.findUserByEmail(email);
     }
 
     //good
-    @GetMapping("/v1.1/user-microservice/users/id")
+    @GetMapping("/v2.0/user-microservice/users/id")
     public Optional<User> findUserById(String id){
         return userService.findUserById(id);
     }
 
     //good
-    @GetMapping("/v1.1/user-microservice/users")
+    @GetMapping("/v2.0/user-microservice/users")
     public List findAllUser(){
         return userService.findAllUser();
     }
 
     //good
-    @PostMapping("/v1.1/user-microservice/picturePath")
+    @PostMapping("/v2.0/user-microservice/picturePath")
     public String addPicPathOnly(String Id, String strogepath){
         return userService.addPicPathOnly(Id,strogepath);
     }
