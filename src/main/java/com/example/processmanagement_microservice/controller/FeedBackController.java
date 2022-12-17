@@ -21,8 +21,8 @@ import java.util.Optional;
 /**
  * @author ：ZXM+LJC
  * @description：FeedBackController
- * @date ：2022-12-9 15:43
- * @version : 1.1
+ * @date ：2022-12-17 17:56
+ * @version : 2.0
  */
 
 @CrossOrigin
@@ -32,7 +32,7 @@ public class FeedBackController {
     FeedBackService feedBackService;
 
     //good
-    @PostMapping("/v1.1/processmanagement-microservice/feedback/pictures")
+    @PostMapping("/v2.0/processmanagement-microservice/feedback/pictures")
     public String addPicture(String subjectId, String createTime, MultipartFile picture, HttpServletRequest request) throws IOException {
         return feedBackService.addPicture(subjectId,createTime, picture,request);
         //Map map = request.getParameterMap();
@@ -47,67 +47,67 @@ public class FeedBackController {
         //MultipartFile multipartFile = new MockMultipartFile();
     }
 
-    @PostMapping("/v1.1/processmanagement-microservice/feedback/picturesOnly")
+    @PostMapping("/v2.0/processmanagement-microservice/feedback/picturesOnly")
     public String addPicOnly(String subjectId,String createTime,MultipartFile picture,String storagePath){
         return feedBackService.addPicOnly(subjectId,createTime,picture,"feedBackPic");
     }
 
-    @PostMapping("/v1.1/processmanagement-microservice/feedback/picPathOnly")
+    @PostMapping("/v2.0/processmanagement-microservice/feedback/picPathOnly")
     public String addPicPathOnly(String subjectId,String createTime,String newPath){
         return feedBackService.addPicPathOnly(subjectId,createTime,newPath);
     }
 
     //good
-    @PostMapping("/v1.1/processmanagement-microservice/feedback/content")
+    @PostMapping("/v2.0/processmanagement-microservice/feedback/content")
     public void addContent(String subjectId,String createTime,String content){
         feedBackService.addContent(subjectId,createTime,content);
     }
 
     //good
-    @PutMapping("/v1.1/processmanagement-microservice/feedback/status")
+    @PutMapping("/v2.0/processmanagement-microservice/feedback/status")
     public void changeStatus(String subjectId,String createTime,String status){
         feedBackService.changeStatus(subjectId,createTime,status);
     }
 
     //good
-    @PostMapping("/v1.1/processmanagement-microservice/feedback")
+    @PostMapping("/v2.0/processmanagement-microservice/feedback")
     public void addFeedBack(String subjectId) throws IOException{
         feedBackService.addFeedBack(subjectId);
     }
 
     //good
-    @DeleteMapping ("/v1.1/processmanagement-microservice/feedback")
+    @DeleteMapping ("/v2.0/processmanagement-microservice/feedback")
     public void deleteFeedBack(String subjectId,String time) throws IOException{
         feedBackService.deleteFeedBackByPK(subjectId,time);
     }
 
     //good
-    @DeleteMapping ("/v1.1/processmanagement-microservice/feedback/Id")
+    @DeleteMapping ("/v2.0/processmanagement-microservice/feedback/Id")
     public void deleteFeedBackById(String id) throws IOException{
         feedBackService.deleteFBById(id);
     }
 
     //good
-    @GetMapping ("/v1.1/processmanagement-microservice/feedback/subjectId")
+    @GetMapping ("/v2.0/processmanagement-microservice/feedback/subjectId")
     public List findFBBySB(String subjectId) throws IOException{
         return feedBackService.findFBBySB(subjectId);
     }
 
     //good
-    @GetMapping ("/v1.1/processmanagement-microservice/feedback/sponsorId")
+    @GetMapping ("/v2.0/processmanagement-microservice/feedback/sponsorId")
     public List findFBBySP(String sponsorId) throws IOException{
         return feedBackService.findFBBySP(sponsorId);
     }
 
     //good
-    @GetMapping ("/v1.1/processmanagement-microservice/feedback/all")
+    @GetMapping ("/v2.0/processmanagement-microservice/feedback/all")
     public List findAllFB() throws IOException{
         return feedBackService.findAllFeedBack();
     }
 
     //new
     //good
-    @GetMapping ("/v1.6/processmanagement-microservice/feedback/sponsorIdPlusPage")
+    @GetMapping ("/v2.0/processmanagement-microservice/feedback/sponsorIdPlusPage")
     public List findFeedBackInfoBySPPlusPage(String sponsorId,String index,String pageSize){
         return feedBackService.findFeedBackInfoBySPPlusPage(sponsorId,index,pageSize);
     }

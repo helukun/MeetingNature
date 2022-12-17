@@ -12,8 +12,8 @@ import java.util.Optional;
 /**
  * @author ：ZXM+LJC
  * @description：OrederController
- * @date ：2022-12-10 14:08
- * @version : 1.1
+ * @date ：2022-12-17 17:58
+ * @version : 2.0
  */
 
 @CrossOrigin
@@ -23,43 +23,43 @@ public class OrderController {
     private OrderService orderService;
 
     //good
-    @PostMapping("/v1.1/processmanagement-microservice/orders")
+    @PostMapping("/v2.0/processmanagement-microservice/orders")
     public int addOrder(Order newOrder){
         return orderService.addOrder(newOrder);
     }
 
     //good
-    @DeleteMapping("/v1.1/processmanagement-microservice/orders")
+    @DeleteMapping("/v2.0/processmanagement-microservice/orders")
     public void deleteOrder(String id){
         orderService.deleteOrder(id);
     }
 
     //good
-    @PutMapping("/v1.1/processmanagement-microservice/orders")
+    @PutMapping("/v2.0/processmanagement-microservice/orders")
     public int changeOrder(String orderId){
         return orderService.changeOrderStatus(orderId);
     }
 
     //good
-    @GetMapping("/v1.1/processmanagement-microservice/orders/Id")
+    @GetMapping("/v2.0/processmanagement-microservice/orders/Id")
     public Optional<Order> findOrder(String Id){
         return orderService.findById(Id);
     }
 
     //good
-    @GetMapping("/v1.1/processmanagement-microservice/orders/incomplete")
+    @GetMapping("/v2.0/processmanagement-microservice/orders/incomplete")
     public List findAllIncompleteOrders(String sponsorId){
         return orderService.getAllIncompleteOrders(sponsorId);
     }
 
     //good
-    @GetMapping("/v1.1/processmanagement-microservice/orders/complete")
+    @GetMapping("/v2.0/processmanagement-microservice/orders/complete")
     public List findAllCompleteOrders(String sponsorId){
         return orderService.getAllCompleteOrders(sponsorId);
     }
 
     //good
-    @GetMapping("/v1.1/processmanagement-microservices/order/sponsorId")
+    @GetMapping("/v2.0/processmanagement-microservices/order/sponsorId")
     public List findAllOrders(String sponsorId){
         return orderService.getAllOrders(sponsorId);
     }
