@@ -12,7 +12,7 @@ import java.util.*;
 public class SponsorService {
     private String ProjectMicroserviceIp="http://121.5.128.97:9006";
     private String FollowMicroserviceIp="http://121.5.128.97:9008";
-    private String ProcessManagementMicroserviceIp="http://localhost:9005";
+    private String ProcessManagementMicroserviceIp="http://121.5.128.97:9005";
     public Object disRPInfo(String size) {
         String resp =HttpRequest.get(ProjectMicroserviceIp+"/v1.1/project-microservice/projects/random?size="+size).body();
         return JSON.parse(resp);
