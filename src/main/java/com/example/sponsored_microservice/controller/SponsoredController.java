@@ -109,7 +109,7 @@ public class SponsoredController {
 
     //good
     @PostMapping("/v1.2/sponsored-microservice/Project")
-    public void addProject(String projectName,String organization,String describe,String status, String monthFee){
-        sponsoredService.addProject(projectName,organization,describe,status,monthFee);
+    public void addProject(String projectName,String organization,String describe, String monthFee){
+        sponsoredService.addProject(projectName,organization,describe,monthFee);
     }
 }
