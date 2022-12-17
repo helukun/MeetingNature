@@ -32,6 +32,4 @@ public class User implements Serializable{
     private String password;
     private String status;
     private String role;
-    /*头像图片的路径*/
-    private String profilePath;
 }
