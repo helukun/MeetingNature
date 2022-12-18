@@ -112,4 +112,9 @@ public class SponsoredController {
     public String addProject(String projectName,String organization,String describe,String status, String monthFee){
         return sponsoredService.addProject(projectName,organization,describe,status,monthFee);
     }
+
+    @PostMapping("/v2.0/sponsored-microservice/Notice/sim")
+    public String addNoticeSim(String content,String subjectId){
+        return sponsoredService.addNoticeSim(content,subjectId);
+    }
 }

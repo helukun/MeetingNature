@@ -88,16 +88,40 @@ public class SponsoredService {
     }
 
     public void savePlusSubmitFeedBack(String subjectId,String createTime,String content,String status){
+        Map data1 = new HashMap();
+        Map data2 = new HashMap();
+        if(subjectId!=null){
+            data1.put("subjectId", subjectId);
+            data2.put("subjectId", subjectId);
+        }
+        if(createTime!=null){
+            data1.put("createTime", createTime);
+            data2.put("createTime", createTime);
+        }
+        if(content!=null){
+            data1.put("content", content);
+        }
+        if(subjectId!=null){
+            data2.put("status", status);
+        }
         String result1 =HttpRequest.post(ProcessManagementMicroserviceIp
+                +"/v2.0/processmanagement-microservice/feedback/content").form(data1).body();
+        String result2 =HttpRequest.put(ProcessManagementMicroserviceIp
+                +"/v2.0/processmanagement-microservice/feedback/status").form(data2).body();
+
+
+
+
+        /*String result1 =HttpRequest.post(ProcessManagementMicroserviceIp
                 +"/v2.0/processmanagement-microservice/feedback/content?subjectId="+subjectId
                 +"&createTime="+createTime
                 +"&content="+content
-        ).body();
-        String result2 =HttpRequest.put(ProcessManagementMicroserviceIp
+        ).body();*/
+        /*String result2 =HttpRequest.put(ProcessManagementMicroserviceIp
                 +"/v2.0/processmanagement-microservice/feedback/status?subjectId="+subjectId
                 +"&createTime="+createTime
                 +"&status="+status
-        ).body();
+        ).body();*/
     }
 
     public String addPicToFBcon(String subjectId, String createTime,MultipartFile picture,String storagePath){
@@ -243,6 +267,18 @@ public class SponsoredService {
             data.put("monthFee", monthFee);
         }
         String result =HttpRequest.post(ProjectMicroserviceIp+"/v2.0/project-microservice/projects").form(data).body();
+        return result;
+    }
+
+    public String addNoticeSim(String content,String subjectId){
+        Map data = new HashMap();
+        if(content!=null){
+            data.put("content", content);
+        }
+        if(subjectId!=null){
+            data.put("subjectId", subjectId);
+        }
+        String result=HttpRequest.post(FollowMicroserviceIp+"/v2.0/follow-microservice/notice/sim").form(data).body();
         return result;
     }
 }
