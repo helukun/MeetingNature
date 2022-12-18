@@ -70,4 +70,9 @@ public class NoticeController {
     public Page findNOTBySBPlusPage(String subjectId, int index, int pageSize) throws IOException {
         return noticeService.findNOTBySBPlusPage(subjectId,index,pageSize);
     }
+
+    @PostMapping("/v2.0/follow-microservice/notice/sim")
+    public String addNoticeSim(Notice newNotice){
+        return noticeService.addNoticeSim(newNotice);
+    }
 }

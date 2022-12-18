@@ -132,6 +132,22 @@ public class NoticeService {
         return "https://meeting-nature.oss-cn-shanghai.aliyuncs.com/"+newPath;
     }
 
+    public String addNoticeSim(Notice newNotice){
+        newNotice.setId(this.setNextId());
+        newNotice.setTitle("");
+        newNotice.setCreateTime(String.valueOf(LocalDateTime.now()));
+        newNotice.setStatus("complete");
+        newNotice.setPathList(new ArrayList<>());
+        if(newNotice.getContent()==null){
+            newNotice.setContent("");
+        }
+        if(newNotice.getSubjectId()==null){
+            return "Failed!";
+        }
+        noticeDao.save(newNotice);
+        return newNotice.getId();
+    }
+
     public String addNotice(String subjectId) throws IOException {
         int exist=this.isExist(subjectId,String.valueOf(LocalDateTime.now()));
         Notice notice=new Notice();
