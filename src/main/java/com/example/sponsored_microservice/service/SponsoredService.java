@@ -240,7 +240,34 @@ public class SponsoredService {
         for(int i=(realIndex-1)*realPageSize;i<realSize&&i<realIndex*realPageSize;i++){
             Final.add(res.get(i));
         }
-        return Final;
+        List realFinalRes=new ArrayList<>();
+        int size=Final.size();
+        for(int i=0;i<size;i++){
+            Object o=Final.get(i);
+            String objS= String.valueOf(o);
+            int pos=objS.indexOf("\"subjectId\"");
+            String subs=objS.substring(pos+13);
+            int firstIndex=subs.indexOf('\"');
+            //找到的subjectId
+            String resId=subs.substring(0,firstIndex);
+            String proResp =HttpRequest.get(ProjectMicroserviceIp+"/v2.0/project-microservice/projects/Id?id="+resId).body();
+            //int startPosOfProjectName=proResp.indexOf("\"projectName\"");
+            String projectNamesub1=proResp.substring(proResp.indexOf("\"projectName\"")+1);
+            String projectNamesub2=projectNamesub1.substring((projectNamesub1.indexOf('\"')+1));
+            String projectNamesub3=projectNamesub2.substring(projectNamesub2.indexOf('\"')+1);
+            String projectName=projectNamesub3.substring(0,projectNamesub3.indexOf('\"'));
+
+            /*String organizationsub1=proResp.substring(proResp.indexOf("\"projectName\"")+1);
+            String organizationsub2=organizationsub1.substring((organizationsub1.indexOf('\"')+1));
+            String organizationsub3=organizationsub2.substring(organizationsub2.indexOf('\"')+1);
+            String organization=organizationsub3.substring(0,organizationsub3.indexOf('\"'));*/
+
+            String result=objS.substring(0,objS.lastIndexOf('}'))
+                    +','+"\"projectName\":"+'\"'+projectName+'\"'+'}';
+            realFinalRes.add(JSON.parse(result));
+        }
+
+        return realFinalRes;
     }
 
     public void deleteFBById(String id){
