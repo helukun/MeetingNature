@@ -183,6 +183,8 @@ public class FeedBackService {
         int exist=this.isExist(subjectId,String.valueOf(LocalDateTime.now()));
         FeedBack feedBack=new FeedBack();
         feedBack.setId(this.setNextId())
+                .setContent("")
+                .setTitle("")
                 .setSubjectId(subjectId)
                 .setCreateTime(String.valueOf(LocalDateTime.now()))
                 .setStatus("incomplete")
