@@ -27,7 +27,7 @@ import java.util.Map;
 public class SponsoredService {
     @Autowired
     OSSService ossService;
-    private String ProjectMicroserviceIp="http://localhost:9006";
+    private String ProjectMicroserviceIp="http://121.5.128.97:9006";
     private String FollowMicroserviceIp="http://121.5.128.97:9008";
     private String ProcessManagementMicroserviceIp="http://121.5.128.97:9005";
 
