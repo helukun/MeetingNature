@@ -48,8 +48,8 @@ public class SponsoredController {
 
     //good
     @GetMapping("/v2.0/sponsored-microservice/Notice/SB")
-    public Object findNotBySB(String subjectId) throws IOException{
-        return sponsoredService.findNotBySB(subjectId);
+    public int NumOffindNotBySB(String subjectId) throws IOException{
+        return sponsoredService.NumOffindNotBySB(subjectId);
     }
 
     //good
@@ -105,6 +105,17 @@ public class SponsoredController {
     @DeleteMapping("/v2.0/sponsored-microservice/FeedBack/Id")
     public void deleteFBById(String id){
         sponsoredService.deleteFBById(id);
+    }
+
+    //good
+    @DeleteMapping("/v2.0/sponsored-microservice/FeedBack")
+    public void deleteFBByPK(String subjectId,String time){
+        sponsoredService.deleteFBByPK(subjectId,time);
+    }
+
+    @DeleteMapping("/v2.0/sponsored-microservice/Project/Pic")
+    public void deletePicOfPro(String id,String picPath){
+        sponsoredService.deletePicOfPro(id,picPath);
     }
 
     //good

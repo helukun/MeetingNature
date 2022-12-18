@@ -58,18 +58,25 @@ public class SponsoredService {
         //return JSON.parse(resp);
     }
 
-    public Object findNotBySB(String subjectId) throws IOException {
+    public int NumOffindNotBySB(String subjectId) throws IOException {
         String resp=HttpRequest.get(FollowMicroserviceIp+"/v2.0/follow-microservice/notice/subjectId?subjectId="+
                 subjectId).body();
-        return JSON.parse(resp);
+        List l = (List) JSON.parse(resp);
+        return l.size();
     }
 
     public Object findNotBySBPlusPage(String subjectId,int index,int pageSize) throws IOException {
+        int size=this.NumOffindNotBySB(subjectId);
         String resp=HttpRequest.get(FollowMicroserviceIp+"/v2.0/follow-microservice/notice/SBPlusPage?subjectId="+
                 subjectId+"&index="
                 +index+"&pageSize="
                 +pageSize).body();
-        return JSON.parse(resp);
+        Map map=new HashMap<>();
+        map.put("List",JSON.parse(resp));
+        map.put("Total",size);
+        Object o=map;
+        return o;
+        //return JSON.parse(resp);
     }
 
     public void changeProject(String id,String projectName,String organization,String describe,String status, String monthFee){
@@ -152,6 +159,12 @@ public class SponsoredService {
                 +"?id="+id
                 +"&newPath="+res).body();
         return tmp;
+    }
+
+    public void deletePicOfPro(String id,String picPath){
+        String res=HttpRequest.delete(ProjectMicroserviceIp+"/v2.0/project-microservice/projects/deletePic"
+                +"?id="+id
+                +"&picPath="+picPath).body();
     }
 
     public String addPicToNotCon(String subjectId,String createTime,MultipartFile picture,String storagePath){
@@ -311,6 +324,12 @@ public class SponsoredService {
         String resp1=HttpRequest.delete(ProcessManagementMicroserviceIp
                 +"/v2.0/processmanagement-microservice/feedback/Id?id="
                 +id).body();
+    }
+
+    public void deleteFBByPK(String subjectId,String time){
+        String res=HttpRequest.delete(ProcessManagementMicroserviceIp
+        +"/v2.0/processmanagement-microservice/feedback?subjectId="+subjectId
+        +"&time="+time).body();
     }
 
     public String addProject(String projectName,String organization,String describe,String status, String monthFee){
