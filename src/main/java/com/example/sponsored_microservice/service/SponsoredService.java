@@ -27,7 +27,7 @@ import java.util.Map;
 public class SponsoredService {
     @Autowired
     OSSService ossService;
-    private String ProjectMicroserviceIp="http://121.5.128.97:9006";
+    private String ProjectMicroserviceIp="http://localhost:9006";
     private String FollowMicroserviceIp="http://121.5.128.97:9008";
     private String ProcessManagementMicroserviceIp="http://121.5.128.97:9005";
 
@@ -37,12 +37,25 @@ public class SponsoredService {
         return JSON.parse(resp);
     }
 
+    public int NumOfProByOrg(String organization){
+        String resp=HttpRequest.get(ProjectMicroserviceIp+"/v2.0/project-microservice/projects/organization?organization="+
+                organization).body();
+       List l = (List) JSON.parse(resp);
+       return l.size();
+    }
+
     public Object findProByOrgPlusPage(String organization,int index,int pageSize){
+        int ProjectSize=this.NumOfProByOrg(organization);
         String resp=HttpRequest.get(ProjectMicroserviceIp+"/v2.0/project-microservice/projects/organizationPlusPage?organization="+
                 organization+"&index="
                 +index+"&pageSize="
                 +pageSize).body();
-        return JSON.parse(resp);
+        Map map=new HashMap<>();
+        map.put("List",JSON.parse(resp));
+        map.put("Total",ProjectSize);
+        Object o=map;
+        return o;
+        //return JSON.parse(resp);
     }
 
     public Object findNotBySB(String subjectId) throws IOException {
