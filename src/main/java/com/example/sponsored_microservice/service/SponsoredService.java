@@ -206,8 +206,28 @@ public class SponsoredService {
         return Final;
     }
 
+    public int findNumOfFeedBackByOrg(String organization){
+        List res=new ArrayList<>();
+        String resp1=HttpRequest.get(ProjectMicroserviceIp+"/v2.0/project-microservice/proId/organization?organization="+
+                organization).body();
+        List tmp1=(List)JSON.parse(resp1);
+        for(Object o:tmp1){
+            String s= (String) o;
+            String resp2=HttpRequest.get(ProcessManagementMicroserviceIp
+                    +"/v2.0/processmanagement-microservice/feedback/subjectId?subjectId="
+                    +s).body();
+            List tmp2 = (List)JSON.parse(resp2);
+            for(Object os:tmp2){
+                res.add(os);
+            }
+        }
+        return res.size();
+    }
+
 
     public Object findAllFeedBackByOrg(String organization,String index,String pageSize){
+        int FeedBackSize=this.findNumOfFeedBackByOrg(organization);
+
         List res=new ArrayList<>();
         String resp1=HttpRequest.get(ProjectMicroserviceIp+"/v2.0/project-microservice/proId/organization?organization="+
                 organization).body();
@@ -267,7 +287,11 @@ public class SponsoredService {
             realFinalRes.add(JSON.parse(result));
         }
 
-        return realFinalRes;
+        Map map=new HashMap<>();
+        map.put("List",realFinalRes);
+        map.put("Total",FeedBackSize);
+        Object o=map;
+        return o;
     }
 
     public void deleteFBById(String id){

@@ -117,4 +117,9 @@ public class SponsoredController {
     public String addNoticeSim(String content,String subjectId){
         return sponsoredService.addNoticeSim(content,subjectId);
     }
+
+    @GetMapping("/v2.0/sponsored-microservice/FeedBack/AllByOrg/num")
+    public Object findNumOfFeedBackByOrg(String organization){
+        return sponsoredService.findNumOfFeedBackByOrg(organization);
+    }
 }
