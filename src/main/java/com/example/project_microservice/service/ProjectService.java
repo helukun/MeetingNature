@@ -6,10 +6,7 @@ import com.example.project_microservice.dao.ProjectDao;
 import jakarta.servlet.http.HttpServletRequest;
 import org.bson.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -342,7 +339,11 @@ public class ProjectService {
     public List findProjectByOrg(String organization){
         Project checkProject=new Project();
         checkProject.setOrganization(organization);
-        Example<Project> projectExample=Example.of(checkProject);
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withMatcher("organization", ExampleMatcher.GenericPropertyMatchers.contains());
+        Example<Project> projectExample=Example.of(checkProject,matcher);
+        //Example<Project> projectExample=Example.of(checkProject);
         List<Project> projectList=projectDao.findAll(projectExample);
         return projectList;
     }
