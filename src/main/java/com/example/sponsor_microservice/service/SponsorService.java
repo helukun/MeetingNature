@@ -50,6 +50,13 @@ public class SponsorService {
         String result = HttpRequest.post(FollowMicroserviceIp + "/v2.0/follow-microservice/follow").form(data).body();
     }
 
+    public void removeFollow(String followerId,String subjectId){
+        Map data = new HashMap();
+        data.put("followerId", followerId);
+        data.put("subjectId", subjectId);
+        String result = HttpRequest.delete(FollowMicroserviceIp + "/v2.0/follow-microservice/follow").form(data).body();
+    }
+
     public Object getUserById(String id) {
         String user = HttpRequest.get(UserMicroserviceIp + "/v2.0/user-microservice/users/id?id=" + id).body();
         return user;
@@ -162,4 +169,82 @@ public class SponsorService {
         Object o=map;
         return o;
     }
+
+    public Object findNoticeInfoBySPPlusPage(String followerId,String index,String pageSize){
+        String res=HttpRequest.get(FollowMicroserviceIp+"/v2.0/follow-microservice/notice/page/followId?followerId="+followerId
+                +"&index="+index
+                +"&pageSize="+pageSize).body();
+
+        String SizeRes=HttpRequest.get(FollowMicroserviceIp+"/v2.0/follow-microservice/notice/followerId?followerId="+followerId).body();
+        List tmp2= (List) JSON.parse(SizeRes);
+        int Totalsize=tmp2.size();
+
+        List tmp= (List) JSON.parse(res);
+        int size=tmp.size();
+
+        List tmpPro=new ArrayList<>();
+        for(int i=0;i<size;i++){
+            Object o=tmp.get(i);
+            String objS= String.valueOf(o);
+            int pos=objS.indexOf("\"subjectId\"");
+            String subs=objS.substring(pos+13);
+            int firstIndex=subs.indexOf('\"');
+            //找到的subjectId
+            String resId=subs.substring(0,firstIndex);
+            String proResp =HttpRequest.get(ProjectMicroserviceIp+"/v2.0/project-microservice/projects/Id?id="+resId).body();
+            //int startPosOfProjectName=proResp.indexOf("\"projectName\"");
+            String projectNamesub1=proResp.substring(proResp.indexOf("\"projectName\"")+1);
+            String projectNamesub2=projectNamesub1.substring((projectNamesub1.indexOf('\"')+1));
+            String projectNamesub3=projectNamesub2.substring(projectNamesub2.indexOf('\"')+1);
+            String projectName=projectNamesub3.substring(0,projectNamesub3.indexOf('\"'));
+
+            String organizationsub1=proResp.substring(proResp.indexOf("\"projectName\"")+1);
+            String organizationsub2=organizationsub1.substring((organizationsub1.indexOf('\"')+1));
+            String organizationsub3=organizationsub2.substring(organizationsub2.indexOf('\"')+1);
+            String organization=organizationsub3.substring(0,organizationsub3.indexOf('\"'));
+
+            String result=objS.substring(0,objS.lastIndexOf('}'))+','+"\"projectName\":"+'\"'+projectName+'\"'+','+"\"organization\":"+'\"'+organization+'\"'+'}';
+            tmpPro.add(JSON.parse(result));
+        }
+
+        Map map=new HashMap<>();
+        map.put("List",tmpPro);
+        map.put("Total",Totalsize);
+        Object o=map;
+        return o;
+    }
+    /*根据followerId分页返回其关注的项目信息*/
+    public Object findProjectInfoBySPPlusPage(String followerId,String index,String pageSize){
+        String tmpList=HttpRequest.get(FollowMicroserviceIp+"/v2.0/follow-microservice/follow/followerId?followerId="+followerId).body();
+        List followList= (List) JSON.parse(tmpList);
+        List result=new ArrayList<>();
+        for(int i=0;i<followList.size();i++){
+            String follow=String.valueOf(followList.get(i));
+            /*从中手动提取出subjectId*/
+            String subjectId=follow.substring(follow.indexOf("\"subjectId\"")+13,follow.lastIndexOf("\""));
+            String project=HttpRequest.get(ProjectMicroserviceIp+"/v2.0/project-microservice/projects/Id?Id="+subjectId).body();
+            result.add(JSON.parse(project));
+        }
+        /*关注的总项目数*/
+        int total=result.size();
+        //页数
+        int pages=total/Integer.parseInt(pageSize);
+        if(total%Integer.parseInt(pageSize)!=0)
+            pages+=1;
+        List pageresult=new ArrayList<>();
+        for(int i=(Integer.parseInt(index)-1)*Integer.parseInt(pageSize);i<(Integer.parseInt(index)-1)*Integer.parseInt(pageSize)+3;i++)
+        {
+            if(i>total-1)
+                break;
+            pageresult.add(result.get(i));
+        }
+        Map map=new HashMap<>();
+        map.put("List",pageresult);
+        map.put("Total",total+"");
+        Object o=map;
+        return o;
+    }
 }
+
+
+

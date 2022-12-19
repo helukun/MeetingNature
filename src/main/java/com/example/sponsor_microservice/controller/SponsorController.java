@@ -43,6 +43,10 @@ public class SponsorController {
         sponsorService.addFollow(followerId,subjectId);
     }
 
+    //good
+    @DeleteMapping("/v2.0/sponsor-microservice/follow")
+    public  void  removeFollow(String followerId,String subjectId){sponsorService.removeFollow(followerId,subjectId);}
+
     @GetMapping("/v2.0/sponsor-microservice/follow/users/id")
     public Object GetUserById(String id){
         return sponsorService.getUserById(id);
@@ -74,4 +78,14 @@ public class SponsorController {
         return sponsorService.findFeedBackInfoBySPPlusPage(sponsorId,index,pageSize);
     }
 
+    //good
+    @GetMapping("/v2.0/sponsor-microservice/notice/followerId")
+    public Object findNoticeInfoByPageByFollowerId(String index,String pageSize,String followerId){
+        return sponsorService.findNoticeInfoBySPPlusPage(followerId,index,pageSize);
+    }
+
+    @GetMapping("/v2.0/sponsor-microservice/projects/followerId")
+    public Object findProjectByPageByFollowerId(String index,String pageSize,String followerId){
+        return sponsorService.findProjectInfoBySPPlusPage(followerId,index,pageSize);
+    }
 }
