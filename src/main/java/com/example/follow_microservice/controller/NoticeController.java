@@ -75,4 +75,9 @@ public class NoticeController {
     public String addNoticeSim(Notice newNotice){
         return noticeService.addNoticeSim(newNotice);
     }
+
+    @GetMapping ("/v2.0/follow-microservice/notice/page/followId")
+    public List<Notice> findNOTBySPPlusPage(String followerId, String index, String pageSize) throws IOException {
+        return noticeService.findFeedBackInfoBySPPlusPage(followerId,index,pageSize);
+    }
 }

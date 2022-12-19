@@ -220,4 +220,41 @@ public class NoticeService {
         }
         return finalList;
     }
+
+    public List<Notice> findFeedBackInfoBySPPlusPage(String followerId,String index,String pageSize){
+        List<Follow> followList=followService.findAllFollowByFOid(followerId);
+        List<String> stringList = new ArrayList<>();
+        for(Follow s:followList){
+            stringList.add(s.getSubjectId());
+        }
+        List<Notice> finalList=new ArrayList<>();
+        for(String sid:stringList){
+            List<Notice> tmp=this.findNOTBySB(sid);
+            for(Notice f:tmp){
+                finalList.add(f);
+            }
+        }
+        List Final=new ArrayList<>();
+        int realSize=finalList.size();
+        int realIndex= Integer.parseInt(index);
+        int realPageSize= Integer.parseInt(pageSize);
+        int rest=realSize%realPageSize;
+        int numOfPages=0;
+        if(rest==0){
+            numOfPages=realSize/realPageSize;
+        }
+        else{
+            numOfPages=realSize/realPageSize+1;
+        }
+        if(realIndex>numOfPages||realIndex<=0){
+            return Final;
+        }
+        for(int i=(realIndex-1)*realPageSize;i<realSize&&i<realIndex*realPageSize;i++){
+            Final.add(finalList.get(i));
+        }
+        return Final;
+    }
+
 }
+
+
