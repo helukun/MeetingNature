@@ -222,7 +222,7 @@ public class SponsorService {
             String follow=String.valueOf(followList.get(i));
             /*从中手动提取出subjectId*/
             String subjectId=follow.substring(follow.indexOf("\"subjectId\"")+13,follow.lastIndexOf("\""));
-            String project=HttpRequest.get(ProjectMicroserviceIp+"/v2.0/project-microservice/projects/Id?Id="+subjectId).body();
+            String project=HttpRequest.get(ProjectMicroserviceIp+"/v2.0/project-microservice/projects/Id?id="+subjectId).body();
             result.add(JSON.parse(project));
         }
         /*关注的总项目数*/
