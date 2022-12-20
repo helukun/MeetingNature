@@ -71,12 +71,7 @@ public class SponsorshipService {
         String subjectid=sponsorship.getSubjectId();
         int exist=this.isExist(sponsorid,subjectid);
         int success=0;
-        sponsorship.setId(this.setNextId())
-                .setStatus("green");
-        sponsorshipDao.save(sponsorship);
-        success=1;
-        System.out.println("增加成功");
-        /*if(exist==0){
+        if(exist==0){
             sponsorship.setId(this.setNextId())
                     .setStatus("green");
             sponsorshipDao.save(sponsorship);
@@ -84,8 +79,12 @@ public class SponsorshipService {
             System.out.println("增加成功");
         }
         else{
-            System.out.println("赞助已存在，无法添加！");
-        }*/
+            sponsorship.setId(findByPKNo(sponsorship.getSponsorId(),sponsorship.getSubjectId()).getId())
+                    .setStatus("green");
+            sponsorshipDao.save(sponsorship);
+            success=1;
+            System.out.println("赞助已存在，刷新赞助关系");
+        }
         return success;
     }
 
