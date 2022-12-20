@@ -24,7 +24,7 @@ public class OrderController {
 
     //good
     @PostMapping("/v2.0/processmanagement-microservice/orders")
-    public int addOrder(Order newOrder){
+    public String addOrder(Order newOrder){
         return orderService.addOrder(newOrder);
     }
 

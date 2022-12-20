@@ -50,11 +50,12 @@ public class OrderService {
     }
 
     /*给订单也设置为了自生成的id，只要没有出现报错，则永远添加成功，所以返回1*/
-    public int addOrder(Order order){
+    public String addOrder(Order order){
         order.setOrderId(setNextId());
         order.setStatus("incomplete");
         order.setSetupTime(String.valueOf(LocalDateTime.now()));
-        return 1;
+        orderDao.save(order);
+        return order.getOrderId();
     }
 
     /*/
