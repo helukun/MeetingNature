@@ -65,12 +65,18 @@ public class SponsorshipService {
         sponsorshipDao.delete(sponsorship);
     }
 
+    /*现在不需要判断是否存在，上层函数会自动计算续期*/
     public int addSponsorship(Sponsorship sponsorship){
         String sponsorid=sponsorship.getSponsorId();
         String subjectid=sponsorship.getSubjectId();
         int exist=this.isExist(sponsorid,subjectid);
         int success=0;
-        if(exist==0){
+        sponsorship.setId(this.setNextId())
+                .setStatus("green");
+        sponsorshipDao.save(sponsorship);
+        success=1;
+        System.out.println("增加成功");
+        /*if(exist==0){
             sponsorship.setId(this.setNextId())
                     .setStatus("green");
             sponsorshipDao.save(sponsorship);
@@ -79,7 +85,7 @@ public class SponsorshipService {
         }
         else{
             System.out.println("赞助已存在，无法添加！");
-        }
+        }*/
         return success;
     }
 
