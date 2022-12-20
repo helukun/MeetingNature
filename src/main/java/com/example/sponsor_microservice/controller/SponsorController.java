@@ -53,7 +53,7 @@ public class SponsorController {
     }
 
     @PostMapping("/v2.0/sponsor-microservice/order")
-    public int CreateOrder(String sponsorId, String subjectId, String amount, String SponsorshipPeriod){
+    public String CreateOrder(String sponsorId, String subjectId, String amount, String SponsorshipPeriod){
         return sponsorService.CreateOrder(sponsorId,subjectId,amount,SponsorshipPeriod);
     }
 
@@ -64,7 +64,7 @@ public class SponsorController {
 
     @PostMapping("/v2.0/sponsor-microservice/sponsorship")
     public int CreateSponsorShip(String orderId, String days) {
-        return sponsorService.CreateSponsorShip(orderId,days);
+        return sponsorService.CreateSponsorShip(orderId);
     }
 
     @PostMapping("/v2.0/sponsor-microservice/profile")

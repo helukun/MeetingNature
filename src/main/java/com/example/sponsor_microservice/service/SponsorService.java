@@ -63,14 +63,14 @@ public class SponsorService {
     }
 
     //创建订单，但此时订单未完成
-    public int CreateOrder(String sponsorId, String subjectId, String amount, String SponsorshipPeriod) {
+    public String CreateOrder(String sponsorId, String subjectId, String amount, String SponsorshipPeriod) {
         Map data = new HashMap();
         data.put("sponsorId", sponsorId);
         data.put("amount", amount);
         data.put("subjectId", subjectId);
         data.put("SponsorshipPeriod", SponsorshipPeriod);
-        HttpRequest.post(ProcessManagementMicroserviceIp + "/v2.0/processmanagement-microservice/orders").form(data).body();
-        return 1;
+        String res=HttpRequest.post(ProcessManagementMicroserviceIp + "/v2.0/processmanagement-microservice/orders").form(data).body();
+        return res;
     }
 
     //改变订单状态，将订单状态从未完成变为已完成
@@ -82,7 +82,7 @@ public class SponsorService {
 
 
     //根据sponsorId生成对应的赞助关系，在修改订单状态之后调用,成功生成返回1，否则返回0
-    public int CreateSponsorShip(String orderId, String days) {
+    public int CreateSponsorShip(String orderId) {
         String order = HttpRequest.get(ProcessManagementMicroserviceIp + "/v2.0/processmanagement-microservice/orders/Id?Id=" + orderId).body();
         String sponsorIdSubOne = order.substring(order.indexOf("\"sponsorId\"") + 13);
         String sponsorId = sponsorIdSubOne.substring(0, sponsorIdSubOne.indexOf('\"'));
@@ -90,6 +90,15 @@ public class SponsorService {
         String subjectId = subjectIdSubOne.substring(0, subjectIdSubOne.indexOf('\"'));
         String creatTimeSubOne = order.substring(order.indexOf("\"setupTime\"") + 13);
         String creatTime = creatTimeSubOne.substring(0, 10);
+        String daysSubone=order.substring(order.indexOf("\"sponsorshipPeriod\"")+21);
+        String days=daysSubone.substring(0,daysSubone.indexOf("\""));
+
+        /*该段代码确定原赞助关系是否存在，如果存在则创建日期选原赞助日期的起始时间*/
+        String originSponsorship=HttpRequest.get(ProcessManagementMicroserviceIp+"/v2.0/processmanagement-microservice/PK?sponsorId="+sponsorId+"&subjectId="+subjectId).body();
+        if(!originSponsorship.equals("")){/*假如赞助关系已经存在*/
+            creatTimeSubOne=originSponsorship.substring(originSponsorship.indexOf("\"cutoffTime\"")+14);
+            creatTime=creatTimeSubOne.substring(0,10);
+        }
         int[] months = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         int startyear = Integer.parseInt(creatTime.substring(0, creatTime.indexOf('-')));
         int startmonth = Integer.parseInt(creatTime.substring(creatTime.indexOf('-') + 1, creatTime.indexOf('-') + 3));
@@ -105,9 +114,18 @@ public class SponsorService {
                 }
             }
             else
-                startday += daynumber + months[startmonth];
+                startday = daynumber + months[startmonth];
         }
-        String EndTime = startyear + "-" + startmonth + "-" + startday;
+
+        /*生成最终的日期串*/
+        String EndTime = startyear + "-";
+        if(startmonth<10)
+            EndTime+="0";
+        EndTime+=startmonth+"-";
+        if(startday<10)
+            EndTime+="0";
+        EndTime+=startday;
+
         Map data = new HashMap();
         data.put("sponsorId", sponsorId);
         data.put("subjectId", subjectId);
