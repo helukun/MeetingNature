@@ -98,9 +98,12 @@ public class ProjectService {
     }
 
     public void changeProjectStatus(String id,String status){
-        Project project=this.findProjectById(id);
-        project.setStatus(status);
-        projectDao.save(project);
+        Project check=new Project();
+        check.setId(id);
+        Example<Project> projectExample=Example.of(check);
+        List<Project> list=projectDao.findAll(projectExample);
+        list.get(0).setStatus(status);
+        projectDao.save(list.get(0));
     }
 
 
