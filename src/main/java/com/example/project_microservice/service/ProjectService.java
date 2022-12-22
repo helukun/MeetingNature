@@ -68,7 +68,7 @@ public class ProjectService {
         project.setFollowerList(new ArrayList<>());
         project.setPicPaths(new ArrayList<>());
         if(project.getStatus()==null){
-            project.setStatus("created");
+            project.setStatus("yellow");
         }
         else{
             project.setStatus(project.getStatus());

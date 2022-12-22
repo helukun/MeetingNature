@@ -125,4 +125,10 @@ public class ProjectController {
     public List disRPInfo(String size){
         return projectService.displayRPInfo(size);
     }
+
+    //good
+    @PostMapping("/v2.0/project-microservice/projects/status")
+    public void changeProjectStatus(String projectId,String status){
+        projectService.changeProjectStatus(projectId,status);
+    }
 }
