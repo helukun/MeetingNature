@@ -26,9 +26,8 @@ public class AuditService {
 
     /*项目状态修改为绿*/
     public void ProjectStatusToGreen(String projectId) {
-        String res = HttpRequest.put(ProjectMicroserviceIp + "/v2.0/project-microservice/projects/status?projectId=" + projectId
-                + "&status=" + "green").body();
-        System.out.println(res);
+        HttpRequest.put(ProjectMicroserviceIp + "/v2.0/project-microservice/projects/status?projectId=" + projectId
+                + "&status=" + "green");
     }
 
     /*项目状态修改为黄*/
