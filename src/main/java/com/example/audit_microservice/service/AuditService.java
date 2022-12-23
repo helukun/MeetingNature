@@ -20,19 +20,19 @@ public class AuditService {
 
     /*项目状态修改为红*/
     public void ProjectStatusToRed(String projectId) {
-        HttpRequest.put(ProjectMicroserviceIp + "/v2.0/project-microservice/projects/status/s?projectId=" + projectId
+        HttpRequest.put(ProjectMicroserviceIp + "/v2.0/project-microservice/projects/status/?projectId=" + projectId
                 + "&status=" + "red");
     }
 
     /*项目状态修改为绿*/
     public void ProjectStatusToGreen(String projectId) {
-        HttpRequest.put(ProjectMicroserviceIp + "/v2.0/project-microservice/projects/status/s?projectId=" + projectId
+        HttpRequest.put(ProjectMicroserviceIp + "/v2.0/project-microservice/projects/status?projectId=" + projectId
                 + "&status=" + "green");
     }
 
     /*项目状态修改为黄*/
     public void ProjectStatusToYellow(String projectId) {
-        HttpRequest.put(ProjectMicroserviceIp + "/v2.0/project-microservice/projects/status/s?projectId=" + projectId
+        HttpRequest.put(ProjectMicroserviceIp + "/v2.0/project-microservice/projects/status?projectId=" + projectId
                 + "&status=" + "yellow");
     }
 }
