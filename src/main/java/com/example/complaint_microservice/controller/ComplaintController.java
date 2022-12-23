@@ -34,7 +34,7 @@ public class ComplaintController {
     }
 
     //good
-    @PostMapping("/v2.0/complaint-microservice/complaint")
+    @PostMapping("/v2.0/complaint-microservice/newcomplaint")
     public String addComplaint(Complaint complaint){
         return complaintService.addComplaint(complaint);
     }
