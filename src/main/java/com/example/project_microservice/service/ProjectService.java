@@ -369,6 +369,29 @@ public class ProjectService {
         return projectPage;
     }
 
+    public Object findGreenProjectByPage(int index,int pageSize){
+        List<Project> orgList=projectDao.findAll();
+        List<Project> tmpList=new ArrayList<>();
+        for(Project p:orgList){
+            if(p.getStatus().equals("green"))
+                tmpList.add(p);
+        }
+
+        int total=tmpList.size();
+        List<Project> greenList=new ArrayList<>();
+        for(int i=(index-1)*pageSize;i<index*pageSize;i++)
+        {
+            if(i>total-1)
+                break;
+            greenList.add(tmpList.get(i));
+        }
+        Map map=new HashMap<>();
+        map.put("List",greenList);
+        map.put("Total",total+"");
+        Object o=map;
+        return o;
+    }
+
     public Page findProjectByOrgPlusPage(String organization,int index,int pageSize){
         Project checkProject=new Project();
         checkProject.setOrganization(organization);
@@ -383,14 +406,21 @@ public class ProjectService {
     public List displayRPInfo(String n){
         int mysize= Integer.parseInt(n);
         Random random = new Random();
-        List<Project> proList=this.findAllProject();
+
+        List<Project> orgList=projectDao.findAll();
+        List<Project> proList=new ArrayList<>();
+        for(Project p:orgList){
+            if(p.getStatus().equals("green"))
+                proList.add(p);
+        }
+
         int size=proList.size();
         int[] visit=new int[size];
         for(int i=0;i<size;i++){
             visit[i]=0;
         }
         List<Project> tmp=new ArrayList<>();
-        for(int i=0;i<mysize;){
+        for(int i=0;i<mysize&&i<size;){
             int rd=random.nextInt(size);
             if(visit[rd]==0){
                 tmp.add(proList.get(rd));
@@ -400,7 +430,7 @@ public class ProjectService {
         }
 
         List res=new ArrayList<>();
-        for(int i=0;i<mysize;i++){
+        for(int i=0;i<tmp.size();i++){
             Map map=new HashMap();
             map.put("id",tmp.get(i).getId());
             map.put("projectName",tmp.get(i).getProjectName());

@@ -86,9 +86,17 @@ public class ProjectController {
     }
 
     //good
+    //服务于被赞助者微服务,不论状态，分页返回所有的项目
     @GetMapping("/v2.0/project-microservice/projects/page")
     public Page<Project> findAllProjectByPage(int index,int pageSize){
         return projectService.findProjectByPage(index,pageSize);
+    }
+
+    //good
+    //服务于赞助者，只分页返回green项目
+    @GetMapping("/v2.0/project-microservice/projects/page/green")
+    public Object findAllGreenProjectByPage(int index,int pageSize){
+        return projectService.findGreenProjectByPage(index,pageSize);
     }
 
     @GetMapping("/v2.0/project-microservice/projects/status")
@@ -120,7 +128,7 @@ public class ProjectController {
         return projectService.findProjectByOrgPlusPage(organization,index,pageSize);
     }
 
-    //good
+    //该接口返回size个随机green项目，只为赞助者微服务服务，其余三个不可调用
     @GetMapping("/v2.0/project-microservice/projects/random")
     public List disRPInfo(String size){
         return projectService.displayRPInfo(size);
