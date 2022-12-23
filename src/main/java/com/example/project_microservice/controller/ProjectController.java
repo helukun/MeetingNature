@@ -135,7 +135,7 @@ public class ProjectController {
     }
 
     //good
-    @PutMapping("/v2.0/project-microservice/projects/status")
+    @PutMapping("/v2.0/project-microservice/projects/statusNew")
     public void changeProjectStatus(String projectId,String status){
         projectService.changeProjectStatus(projectId,status);
     }
