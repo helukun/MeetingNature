@@ -101,7 +101,7 @@ public class ProjectController {
 
     @GetMapping("/v2.0/project-microservice/projects/page/yellow")
     public Object findAllYellowProjectByPage(int index,int pageSize){
-        return projectService.findGreenProjectByPage(index,pageSize);
+        return projectService.findYellowProjectByPage(index,pageSize);
     }
 
     @GetMapping("/v2.0/project-microservice/projects/status")
