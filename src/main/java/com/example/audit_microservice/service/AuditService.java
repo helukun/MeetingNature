@@ -16,7 +16,7 @@ import java.util.Map;
 @Service
 public class AuditService {
 
-    private String ProjectMicroserviceIp = "http://localhost:9006";
+    private String ProjectMicroserviceIp = "http://121.5.128.97:9006";
 
     /*项目状态修改为红*/
     public void ProjectStatusToRed(String projectId) {
