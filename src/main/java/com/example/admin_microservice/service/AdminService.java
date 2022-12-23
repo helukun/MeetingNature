@@ -17,20 +17,20 @@ import java.util.Map;
 @Service
 public class AdminService {
 
-    private String AuditMicroserviceIp = "http://121.5.128.97:9006";
+    private String AuditMicroserviceIp = "http://121.5.128.97:9011";
 
     /*项目状态修改为红*/
     public void ProjectStatusToRed(String projectId) {
-        HttpRequest.put(AuditMicroserviceIp + "/v2.0/audit-microservice/projects/status/red?projectId=" + projectId);
+        HttpRequest.put(AuditMicroserviceIp + "/v2.0/audit-microservice/projects/status/red?projectId=" + projectId).body();
     }
 
     /*项目状态修改为绿*/
     public void ProjectStatusToGreen(String projectId) {
-        HttpRequest.put(AuditMicroserviceIp + "/v2.0/audit-microservice/projects/status/green?projectId=" + projectId);
+        HttpRequest.put(AuditMicroserviceIp + "/v2.0/audit-microservice/projects/status/green?projectId=" + projectId).body();
     }
 
     /*项目状态修改为黄*/
     public void ProjectStatusToYellow(String projectId) {
-        HttpRequest.put(AuditMicroserviceIp + "/v2.0/audit-microservice/projects/status/yellow?projectId=" + projectId);
+        HttpRequest.put(AuditMicroserviceIp + "/v2.0/audit-microservice/projects/status/yellow?projectId=" + projectId).body();
     }
 }
