@@ -17,19 +17,22 @@ import java.util.Map;
 public class SponsorService {
     @Autowired
     OSSService ossService;
-    private String ProjectMicroserviceIp = "http://121.5.128.97:9006";
+    private String ProjectMicroserviceIp = "http://127.0.0.1:9006";
     private String FollowMicroserviceIp = "http://121.5.128.97:9008";
     private String ProcessManagementMicroserviceIp = "http://121.5.128.97:9005";
     private String UserMicroserviceIp = "http://121.5.128.97:9007";
 
+    /*底层返回的已经是green项目所以不用再筛选*/
     public Object disRPInfo(String size) {
         String resp = HttpRequest.get(ProjectMicroserviceIp + "/v2.0/project-microservice/projects/random?size=" + size).body();
+        System.out.println("result:"+resp);
         return JSON.parse(resp);
     }
 
+    /*底层返回*/
     public Object findProjectByPage(int index, int pageSize) {
         String resp = HttpRequest.get(ProjectMicroserviceIp
-                + "/v2.0/project-microservice/projects/page?index="
+                + "/v2.0/project-microservice/projects/page/green?index="
                 + index + "&pageSize="
                 + pageSize).body();
         return JSON.parse(resp);
@@ -172,11 +175,17 @@ public class SponsorService {
             String projectNamesub3=projectNamesub2.substring(projectNamesub2.indexOf('\"')+1);
             String projectName=projectNamesub3.substring(0,projectNamesub3.indexOf('\"'));
 
-            String organizationsub1=proResp.substring(proResp.indexOf("\"projectName\"")+1);
+            String organizationsub1=proResp.substring(proResp.indexOf("\"organization\"")+1);
             String organizationsub2=organizationsub1.substring((organizationsub1.indexOf('\"')+1));
             String organizationsub3=organizationsub2.substring(organizationsub2.indexOf('\"')+1);
             String organization=organizationsub3.substring(0,organizationsub3.indexOf('\"'));
 
+            String statussub1=proResp.substring(proResp.indexOf("\"status\"")+1);
+            String statussub2=statussub1.substring((statussub1.indexOf('\"')+1));
+            String statussub3=statussub2.substring(statussub2.indexOf('\"')+1);
+            String status=statussub3.substring(0,statussub3.indexOf('\"'));
+            if(!status.equals("green"))
+                continue;
             String result=objS.substring(0,objS.lastIndexOf('}'))+','+"\"projectName\":"+'\"'+projectName+'\"'+','+"\"organization\":"+'\"'+organization+'\"'+'}';
             tmpPro.add(JSON.parse(result));
         }
@@ -221,6 +230,12 @@ public class SponsorService {
             String organizationsub3=organizationsub2.substring(organizationsub2.indexOf('\"')+1);
             String organization=organizationsub3.substring(0,organizationsub3.indexOf('\"'));
 
+            String statussub1=proResp.substring(proResp.indexOf("\"status\"")+1);
+            String statussub2=statussub1.substring((statussub1.indexOf('\"')+1));
+            String statussub3=statussub2.substring(statussub2.indexOf('\"')+1);
+            String status=statussub3.substring(0,statussub3.indexOf('\"'));
+            if(!status.equals("green"))
+                continue;
             String result=objS.substring(0,objS.lastIndexOf('}'))+','+"\"projectName\":"+'\"'+projectName+'\"'+','+"\"organization\":"+'\"'+organization+'\"'+'}';
             tmpPro.add(JSON.parse(result));
         }
@@ -235,15 +250,26 @@ public class SponsorService {
     public Object findProjectInfoBySPPlusPage(String followerId,String index,String pageSize){
         String tmpList=HttpRequest.get(FollowMicroserviceIp+"/v2.0/follow-microservice/follow/followerId?followerId="+followerId).body();
         List followList= (List) JSON.parse(tmpList);
+        List originList=new ArrayList<>();
         List result=new ArrayList<>();
         for(int i=0;i<followList.size();i++){
             String follow=String.valueOf(followList.get(i));
             /*从中手动提取出subjectId*/
             String subjectId=follow.substring(follow.indexOf("\"subjectId\"")+13,follow.lastIndexOf("\""));
             String project=HttpRequest.get(ProjectMicroserviceIp+"/v2.0/project-microservice/projects/Id?id="+subjectId).body();
-            result.add(JSON.parse(project));
+            originList.add(JSON.parse(project));
         }
-        /*关注的总项目数*/
+        for(int i=0;i<originList.size();i++){
+            String proResp=String.valueOf(originList.get(i));
+            String statussub1=proResp.substring(proResp.indexOf("\"status\"")+1);
+            String statussub2=statussub1.substring((statussub1.indexOf('\"')+1));
+            String statussub3=statussub2.substring(statussub2.indexOf('\"')+1);
+            String status=statussub3.substring(0,statussub3.indexOf('\"'));
+            if(!status.equals("green"))
+                continue;
+            result.add(originList.get(i));
+        }
+        /*关注的green总项目数*/
         int total=result.size();
         //页数
         int pages=total/Integer.parseInt(pageSize);
