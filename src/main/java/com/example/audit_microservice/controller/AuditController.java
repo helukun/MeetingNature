@@ -1,7 +1,6 @@
 package com.example.audit_microservice.controller;
 
 import com.example.audit_microservice.service.AuditService;
-import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,5 +32,4 @@ public class AuditController {
     public void ProjectStatusToYellow(String projectId){
         auditService.ProjectStatusToYellow(projectId);
     }
-
 }
