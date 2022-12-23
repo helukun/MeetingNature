@@ -99,6 +99,11 @@ public class ProjectController {
         return projectService.findGreenProjectByPage(index,pageSize);
     }
 
+    @GetMapping("/v2.0/project-microservice/projects/page/yellow")
+    public Object findAllYellowProjectByPage(int index,int pageSize){
+        return projectService.findGreenProjectByPage(index,pageSize);
+    }
+
     @GetMapping("/v2.0/project-microservice/projects/status")
     public List<Project> findAllProjectByStatus(String status){
         return projectService.findProjectByStatus(status);

@@ -392,6 +392,29 @@ public class ProjectService {
         return o;
     }
 
+    public Object findYellowProjectByPage(int index,int pageSize){
+        List<Project> orgList=projectDao.findAll();
+        List<Project> tmpList=new ArrayList<>();
+        for(Project p:orgList){
+            if(p.getStatus().equals("yellow"))
+                tmpList.add(p);
+        }
+
+        int total=tmpList.size();
+        List<Project> greenList=new ArrayList<>();
+        for(int i=(index-1)*pageSize;i<index*pageSize;i++)
+        {
+            if(i>total-1)
+                break;
+            greenList.add(tmpList.get(i));
+        }
+        Map map=new HashMap<>();
+        map.put("List",greenList);
+        map.put("Total",total+"");
+        Object o=map;
+        return o;
+    }
+
     public Page findProjectByOrgPlusPage(String organization,int index,int pageSize){
         Project checkProject=new Project();
         checkProject.setOrganization(organization);
