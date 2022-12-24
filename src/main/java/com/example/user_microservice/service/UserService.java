@@ -4,12 +4,6 @@ import com.example.user_microservice.model.User;
 import com.example.user_microservice.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,7 +38,7 @@ public class UserService {
         return result;
     }
 
-    public void addUser(User user){
+    public boolean addUser(User user){
         int exist=this.isExist(user.getEmail(),user.getId());
         if(exist!=1){
             User newUser = new User()
@@ -55,10 +49,12 @@ public class UserService {
                     .setStatus(user.getStatus())
                     .setRole(user.getRole());
             userDao.save(user);
-            System.out.println("添加成功！");
+//            System.out.println("添加成功！");
+            return true;
         }
         else{
-            System.out.println("该邮箱或id已注册，无法再次注册！");
+//            System.out.println("该邮箱或id已注册，无法再次注册！");
+            return false;
         }
     }
 
@@ -209,4 +205,9 @@ public class UserService {
 
         return "https://meeting-nature.oss-cn-shanghai.aliyuncs.com/"+newPath;
     }
+
+
+    public Optional<User> findByUsername(String userName) {
+        return userDao.findByName(userName);
+}
 }
