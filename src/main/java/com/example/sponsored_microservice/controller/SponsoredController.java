@@ -4,6 +4,7 @@ import com.example.sponsored_microservice.service.SponsoredService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -132,5 +133,17 @@ public class SponsoredController {
     @GetMapping("/v2.0/sponsored-microservice/FeedBack/AllByOrg/num")
     public Object findNumOfFeedBackByOrg(String organization){
         return sponsoredService.findNumOfFeedBackByOrg(organization);
+    }
+    @GetMapping("/v2.0/sponsored-microservice/login")
+    public ResponseEntity<Object> login(@RequestParam String name, @RequestParam String password) {
+        return sponsoredService.login(name,password);
+    }
+    @PostMapping(value = "/v2.0/sponsored-microservice/recoverEmail")
+    public ResponseEntity<Object> recoverEmail(@RequestParam String name) {
+        return sponsoredService.recoverEmail(name);
+    }
+    @PostMapping("/v2.0/sponsored-microservice/recover")
+    public ResponseEntity<Object> recover(@RequestParam String name,@RequestParam String code,@RequestParam String newpassword) {
+        return sponsoredService.recover(name,code,newpassword);
     }
 }
