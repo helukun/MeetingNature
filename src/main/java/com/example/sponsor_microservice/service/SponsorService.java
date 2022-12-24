@@ -1,10 +1,13 @@
 package com.example.sponsor_microservice.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.github.kevinsawicki.http.HttpRequest;
 import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class SponsorService {
@@ -21,6 +26,7 @@ public class SponsorService {
     private String FollowMicroserviceIp = "http://121.5.128.97:9008";
     private String ProcessManagementMicroserviceIp = "http://121.5.128.97:9005";
     private String UserMicroserviceIp = "http://121.5.128.97:9007";
+    private String ComplaintMicroserviceIp = "http://121.5.128.97:9013";
 
     /*底层返回的已经是green项目所以不用再筛选*/
     public Object disRPInfo(String size) {
@@ -287,6 +293,75 @@ public class SponsorService {
         map.put("Total",total+"");
         Object o=map;
         return o;
+    }
+
+    public String addComplaint(String sopnsorId,String subjectId,String content){
+        Map data=new HashMap<>();
+        data.put("sponsorId",sopnsorId);
+        data.put("subjectId",subjectId);
+        data.put("content",content);
+        String res=HttpRequest.post(ComplaintMicroserviceIp+"/v2.0/complaint-microservice/complaint").form(data).body();
+        return res;
+    }
+
+    public ResponseEntity<Object> login(String name, String password) {
+        HttpRequest httpRequest=HttpRequest.get(UserMicroserviceIp+"/v2.0/user-microservice/login?name="+name
+                +"&password="+password+"&role="+"1");
+        String res=httpRequest.body();
+        if(httpRequest.badRequest()){
+            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+        }
+        JSONObject jsonObject =  JSON.parseObject(res);
+        return ResponseEntity.ok(jsonObject);
+    }
+
+    public ResponseEntity<Object> registerEmail(String email) {
+        Map data=new HashMap<>();
+        data.put("email",email);
+        HttpRequest httpRequest=HttpRequest.post(UserMicroserviceIp+"/v2.0/user-microservice/registerEmail").form(data);
+        String res=httpRequest.body();
+        if(httpRequest.badRequest()){
+            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("验证码已发送",HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> register(String username,String password,String code,String email) {
+        Map data=new HashMap<>();
+        data.put("username",username);
+        data.put("password",password);
+        data.put("code",code);
+        data.put("email",email);
+        HttpRequest httpRequest=HttpRequest.post(UserMicroserviceIp+"/v2.0/user-microservice/register").form(data);
+        String res=httpRequest.body();
+        if(httpRequest.badRequest()){
+            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("注册成功",HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> recoverEmail(String name) {
+        Map data=new HashMap<>();
+        data.put("name",name);
+        HttpRequest httpRequest=HttpRequest.post(UserMicroserviceIp+"/v2.0/user-microservice/recoverEmail").form(data);
+        String res=httpRequest.body();
+        if(httpRequest.badRequest()){
+            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("验证码已发送",HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> recover(String name, String code, String newpassword) {
+        Map data=new HashMap<>();
+        data.put("name",name);
+        data.put("code",code);
+        data.put("newpassword",newpassword);
+        HttpRequest httpRequest=HttpRequest.post(UserMicroserviceIp+"/v2.0/user-microservice/recover").form(data);
+        String res=httpRequest.body();
+        if(httpRequest.badRequest()){
+            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("新密码修改成功",HttpStatus.OK);
     }
 }
 
