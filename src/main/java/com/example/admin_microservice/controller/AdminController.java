@@ -5,6 +5,7 @@ import com.example.admin_microservice.service.AdminService;
 import com.github.kevinsawicki.http.HttpRequest;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -70,6 +71,18 @@ public class AdminController {
     @GetMapping("/v2.0/admin-microservice/subject/yellow")
     public Object GetAllYellowProject(String index,String pageSize) {
         return adminService.GetAllYellowProject(index,pageSize);
+    }
+    @GetMapping("/v2.0/admin-microservice/login")
+    public ResponseEntity<Object> login(@RequestParam String name, @RequestParam String password) {
+        return adminService.login(name,password);
+    }
+    @PostMapping(value = "/v2.0/admin-microservice/recoverEmail")
+    public ResponseEntity<Object> recoverEmail(@RequestParam String name) {
+        return adminService.recoverEmail(name);
+    }
+    @PostMapping("/v2.0/admin-microservice/recover")
+    public ResponseEntity<Object> recover(@RequestParam String name,@RequestParam String code,@RequestParam String newpassword) {
+        return adminService.recover(name,code,newpassword);
     }
 
 }
