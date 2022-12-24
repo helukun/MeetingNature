@@ -1,14 +1,11 @@
 package com.example.sponsor_microservice.controller;
 
 import com.example.sponsor_microservice.service.SponsorService;
-import com.github.kevinsawicki.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -94,10 +91,5 @@ public class SponsorController {
     @GetMapping("/v2.0/sponsor-microservice/projects/followerId")
     public Object findProjectByPageByFollowerId(String index,String pageSize,String followerId){
         return sponsorService.findProjectInfoBySPPlusPage(followerId,index,pageSize);
-    }
-
-    @PostMapping("/v2.0/sponsor-microservice/complaints")
-    public String addComplaint(String sponsorId,String subjectId,String content){
-        return sponsorService.addComplaint(sponsorId,subjectId,content);
     }
 }
