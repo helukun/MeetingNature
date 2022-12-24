@@ -21,7 +21,6 @@ public class SponsorService {
     private String FollowMicroserviceIp = "http://121.5.128.97:9008";
     private String ProcessManagementMicroserviceIp = "http://121.5.128.97:9005";
     private String UserMicroserviceIp = "http://121.5.128.97:9007";
-    private String ComplaintMicroserviceIp = "http://121.5.128.97:9013";
 
     /*底层返回的已经是green项目所以不用再筛选*/
     public Object disRPInfo(String size) {
@@ -288,15 +287,6 @@ public class SponsorService {
         map.put("Total",total+"");
         Object o=map;
         return o;
-    }
-
-    public String addComplaint(String sopnsorId,String subjectId,String content){
-        Map data=new HashMap<>();
-        data.put("sponsorId",sopnsorId);
-        data.put("subjectId",subjectId);
-        data.put("content",content);
-        String res=HttpRequest.post(ComplaintMicroserviceIp+"/v2.0/complaint-microservice/complaint").form(data).body();
-        return res;
     }
 }
 
